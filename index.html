@@ -888,17 +888,6 @@
 
     <div class="setting-group">
       <span class="setting-label">フィルタ</span>
-      <select id="danger-filter" class="setting-control" onchange="applyArchiveFilters()">
-        <option value="all">全ての危険度</option>
-        <option value="blue">🔵 低</option>
-        <option value="yellow">🟡 中</option>
-        <option value="red">🔴 高</option>
-      </select>
-      <div style="margin-top:10px;">
-        <select id="tag-filter" class="setting-control" onchange="applyArchiveFilters()">
-          <option value="all">全てのタグ</option>
-        </select>
-      </div>
       <div style="margin-top:10px;">
         <select id="type-filter" class="setting-control" onchange="applyArchiveFilters()">
           <option value="all">全ての種類</option>
@@ -989,6 +978,7 @@
     <div class="home-title" id="home-display-title">架空疑問展</div>
     <div class="menu-container">
       <button class="menu-button" onclick="showArchive('symbols')">記号アーカイブ</button>
+      <button class="menu-button" onclick="showArchive('symbolVariants')">記号亜種アーカイブ</button>
       <button class="menu-button" onclick="showArchive('cases')">事案アーカイブ</button>
       <button class="menu-button" onclick="showArchive('orgs')">組織アーカイブ</button>
       <button class="menu-button" onclick="openAbout()">編纂組織について</button>
@@ -1005,12 +995,23 @@
 
     <div id="archive-tabs">
       <button class="menu-button archive-tab active" data-archive="symbols" onclick="showArchive('symbols')">記号</button>
+      <button class="menu-button archive-tab" data-archive="symbolVariants" onclick="showArchive('symbolVariants')">記号亜種</button>
       <button class="menu-button archive-tab" data-archive="cases" onclick="showArchive('cases')">事案</button>
       <button class="menu-button archive-tab" data-archive="orgs" onclick="showArchive('orgs')">組織</button>
+      <button class="menu-button archive-tab" data-archive="survey" onclick="showArchive('survey')">アンケート</button>
     </div>
 
     <div id="search-box-container" class="search-container">
       <input id="archive-search" class="search-input" placeholder="名前、意味、キーワードを検索..." oninput="applyArchiveFilters()" />
+      <select id="danger-filter" class="filter-select" onchange="applyArchiveFilters()">
+        <option value="all">全ての危険度</option>
+        <option value="blue">🔵 低</option>
+        <option value="yellow">🟡 中</option>
+        <option value="red">🔴 高</option>
+      </select>
+      <select id="tag-filter" class="filter-select" onchange="applyArchiveFilters()">
+        <option value="all">全てのタグ</option>
+      </select>
       <select id="author-filter" class="filter-select" onchange="applyArchiveFilters()">
         <option value="all">すべての作者</option>
       </select>
@@ -1023,10 +1024,18 @@
 
     <div id="archive-list"></div>
 
+    <div id="survey-panel" style="display:none; margin-top:18px;">
+      <div class="detail-record" style="padding:18px;">
+        <h2 style="margin-top:0;">📝 アンケート</h2>
+        <p>ご意見や感想はこちらから送れます。</p>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc2cBVRTEts49v5W-jum2-fp77d9r9p_Oald5ISiRF2cYSgXA/viewform?embedded=true" width="640" height="542" frameborder="0" marginheight="0" marginwidth="0" style="width:100%; height:542px; border:0; display:block;">Loading…</iframe>
+      </div>
+    </div>
+
     <div id="no-results" style="display:none; text-align:center; padding:40px; opacity:.5;">
       該当する項目は見つかりませんでした。
     </div>
-    <h5 style="text-align:center; margin:40px 0; opacity:.6;">現在図鑑に登録されているのはここまでです。</h5>
+    <h5 id="archive-end-note" style="text-align:center; margin:40px 0; opacity:.6;">現在図鑑に登録されているのはここまでです。</h5>
   </main>
 
   <div id="about-modal" role="dialog" aria-modal="true" style="display:none;">
@@ -1044,6 +1053,7 @@
         <p>その他に、異常な技術を会得した組織もアーカイブされています。</p>
         <p>閲覧は自己責任で行ってください。</p>
         <p>このプロジェクトは現在T.S氏が運営、管理をしています。</p>
+        <p>ご意見や感想は上の「アンケート」タブから送れます。</p>
         <h4>📖 図鑑の使い方</h4>
         <ul>
           <li>カードをクリック → 危険度ベースの詳細モーダルを表示。</li>
@@ -1061,9 +1071,6 @@
           <li><a href="https://ec2045.github.io/BIB/">BIB</a></li>
         </ul>
 
-
-
-
       </div>
       <button class="menu-button" style="width:100%; margin-top:12px;" onclick="closeAbout()">閉じる</button>
     </div>
@@ -1079,16 +1086,6 @@
     </div>
   </div>
 
-
-  <div id="story-modal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-panel">
-      <h2 id="story-modal-title"></h2>
-      <div id="story-modal-text"></div>
-      <div style="margin-top:12px;">
-        <button class="menu-button" onclick="closeStoryModal()">戻る</button>
-      </div>
-    </div>
-  </div>
 
   <div id="editor-modal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-panel">
@@ -1176,6 +1173,11 @@
           <label>事案ログID（記号/組織/事案共通、カンマ区切り）</label>
           <input id="edit-incident-ids" placeholder="INC-001, INC-002" />
         </div>
+
+        <div class="full">
+          <label>元の記号ID（亜種のみ）</label>
+          <input id="edit-parent-id" placeholder="SYM-001" />
+        </div>
       </div>
 
       <div class="editor-actions">
@@ -1224,7 +1226,8 @@
         currentItem: null,
         pendingItem: null,
         loadingTimer: null,
-        currentProgress: 0
+        currentProgress: 0,
+        editorContext: null
       };
 
       const loadingMessages = [
@@ -1255,6 +1258,10 @@
 
       function escapeHtmlWithBr(s) {
         return escapeHtml(s).replace(/\n/g, '<br>');
+      }
+
+      function escapeAttr(s) {
+        return escapeHtml(s).replaceAll('`', '&#96;');
       }
 
       function splitCsv(v) {
@@ -1323,6 +1330,17 @@
               detail: '最古の記録は19世紀末。外国語の疑問符が導入される際、ピリオドが日本の句点として誤認された結果生まれた。「疑問だが断定を含む」という特殊な文体を示す。',
               origin: '西洋の疑問符と和文の句点文化が交差して生まれたとされる。',
               usage: '短い詰問の末尾、余韻を残したい文末。', tags: ['疑問符', '句点融合', '文体'],
+              relatedCases: ['CAS-001'],
+              createdAt: nowStamp(), updatedAt: nowStamp()
+            },
+            {
+              id: 'SYM-001-2', seq: 1.1, type: 'symbols', name: '句点和疑問符（亜種）', reading: 'くてんわぎもんふ', author: '不明', danger: 'blue',
+              image: 'symbols/疑問図鑑_001_2.png', summary: '句点和疑問符の派生亜種。仕様はほぼ同一。',
+              detail: '句点和疑問符から派生した亜種。外見上の差異は小さく、運用や解釈はほぼ同じとされる。',
+              origin: '作者による派生再設計。',
+              usage: '原種と同様。', tags: ['疑問符', '句点融合', '文体', '亜種'],
+              relatedCases: ['CAS-001'],
+              variantOf: 'SYM-001',
               createdAt: nowStamp(), updatedAt: nowStamp()
             },
             {
@@ -1331,6 +1349,16 @@
               detail: '驚きと同時に文章の終止を強調する。印刷文化の中で、海外の感嘆符が日本語に適応される過程で職人の判断によって変形された記録が残っている。',
               origin: '外国から感嘆符が伝わるときにピリオドが句点として伝わった。',
               usage: '強い納得を伴う感嘆、公的な驚き。', tags: ['感嘆符', '句点融合', 'レトロ'],
+              createdAt: nowStamp(), updatedAt: nowStamp()
+            },
+            {
+              id: 'SYM-002-2', seq: 2.1, type: 'symbols', name: '句点和感嘆符（亜種）', reading: 'くてんかんたんふ', author: '不明', danger: 'blue',
+              image: 'symbols/疑問図鑑_002_2.png', summary: '句点和感嘆符の派生亜種。仕様はほぼ同一。',
+              detail: '句点和感嘆符から派生した亜種。外見上の差異は小さく、運用や解釈はほぼ同じとされる。',
+              origin: '作者による派生再設計。',
+              usage: '原種と同様。', tags: ['疑問符', '句点融合', '文体', '亜種'],
+              relatedCases: ['CAS-002'],
+              variantOf: 'SYM-002',
               createdAt: nowStamp(), updatedAt: nowStamp()
             },
             {
@@ -1366,13 +1394,24 @@
               createdAt: nowStamp(), updatedAt: nowStamp()
             },
             {
-              id: 'SYM-007', seq: 7, type: 'symbols', name: '超疑問符', reading: 'ちょうぎもんふ', author: '不明（宗教団体説あり）', danger: 'red',
+              id: 'SYM-007', seq: 7, type: 'symbols', name: '超疑問符', reading: 'ちょうぎもんふ', author: '不明（宗教団体説)', danger: 'red',
               image: 'symbols/疑問図鑑_007.png', summary: 'そこにあったかもしれないものを表す記号',
               detail: '複数の疑問符が重なった異様な形状。ある宗教団体が「人間が理解できない問い」を象徴するために制作した説がある。',
               origin: 'クエスチョンマークを4つ合体させた形。',
               usage: '形而上学的な問い、根源的な恐怖。', tags: ['神秘的', '哲学的', '多層'],
               createdAt: nowStamp(), updatedAt: nowStamp()
             },
+            {
+              id: 'SYM-007-2', seq: 7.1, type: 'symbols', name: '超疑問符（亜種）', reading: 'ちょうぎもんふ', author: '不明（宗教団体説)', danger: 'red',
+              image: 'symbols/疑問図鑑_007_2.png', summary: '超疑問符の派生亜種。一部書籍では、「世界の移動のエネルギー現に使われた。」との記載もあるが詳細は不明。',
+              detail: '超疑問符から派生した亜種。外見上の差異は大きく、運用や解釈も原種とは異なる可能性が多くの書籍、論文で示唆されている',
+              origin: '作者による派生再設計。',
+              usage: '原種とは一部異なる。', tags: ['疑問符', '超疑問符', '文体', '亜種'],
+              relatedCases: ['CAS-007'],
+              variantOf: 'SYM-007',
+              createdAt: nowStamp(), updatedAt: nowStamp()
+            },
+
             {
               id: 'SYM-008', seq: 8, type: 'symbols', name: '二重否符', reading: 'にじゅうひふ', author: '世界記号統一団体', danger: 'yblue',
               image: 'symbols/疑問図鑑_008.png', summary: '二重否定を表す記号',
@@ -1855,6 +1894,7 @@
           relatedsymbols: Array.isArray(item.relatedsymbols) ? item.relatedsymbols.map(String) : splitCsv(item.relatedsymbols),
           relatedCases: Array.isArray(item.relatedCases) ? item.relatedCases.map(String) : splitCsv(item.relatedCases),
           relatedOrgs: Array.isArray(item.relatedOrgs) ? item.relatedOrgs.map(String) : splitCsv(item.relatedOrgs),
+          variantOf: String(item.variantOf || ''),
           createdAt: item.createdAt || nowStamp(),
           updatedAt: nowStamp()
         };
@@ -1939,7 +1979,16 @@
         return [...authors].sort((a, b) => a.localeCompare(b, 'ja'));
       }
 
+      /* =========================
+         表示対象の切り替え
+      ========================= */
       function getVisibleEntries() {
+        if (state.currentArchive === 'symbolVariants') {
+          return (state.db.symbols || []).filter(item => !!item.variantOf);
+        }
+        if (state.currentArchive === 'symbols') {
+          return (state.db.symbols || []).filter(item => !item.variantOf);
+        }
         return state.db[state.currentArchive] || [];
       }
 
@@ -1958,6 +2007,30 @@
           const item = getItemById(type, id);
           return item ? `${item.name || item.title || id} (${id})` : String(id);
         });
+      }
+
+      function openLinkedItem(type, id) {
+        const item = getItemById(type, id);
+        if (!item) return;
+        const danger = String(item.danger || 'blue').toLowerCase();
+        const warningsDisabled = localStorage.getItem('disable-warnings') === 'true';
+        if (danger === 'red' && !warningsDisabled) {
+          openWarningFlow(item);
+          return;
+        }
+        openUnifiedDetail(type, id);
+      }
+
+      function makeLinkChip(type, id, label) {
+        return `<button type="button" class="tag-badge" style="cursor:pointer; border:1px solid var(--border-color); background:var(--chip-bg); color:var(--chip-text);" onclick="openLinkedItem('${type}', '${escapeAttr(id)}'); event.stopPropagation();">${escapeHtml(label)}</button>`;
+      }
+
+      function makeCaseLinks(ids) {
+        return (ids || []).map(id => {
+          const item = getItemById('cases', id);
+          const label = item ? `${item.name || item.title || item.id} (${item.id})` : String(id);
+          return makeLinkChip('cases', id, label);
+        }).join(' ');
       }
 
       /* =========================
@@ -2230,7 +2303,8 @@
               (item.relatedsymbols || []).join(','),
               (item.relatedCases || []).join(','),
               (item.relatedOrgs || []).join(','),
-              (item.incidentIds || []).join(',')
+              (item.incidentIds || []).join(','),
+              item.variantOf
             ].join(' ').toLowerCase();
             return blob.includes(q);
           });
@@ -2262,7 +2336,8 @@
         const typeLabel = item.type === 'cases' ? '事案'
           : item.type === 'orgs' ? '組織'
             : item.type === 'incidents' ? '報告書'
-              : '記号';
+              : item.variantOf ? '記号亜種'
+                : '記号';
 
         const title = item.name || item.title || `ID ${item.id || ''}`;
         const summary = item.type === 'symbols'
@@ -2315,6 +2390,13 @@
           authorSpan.style.marginLeft = '10px';
           authorSpan.textContent = `作者：${item.author}`;
           meta.appendChild(authorSpan);
+        }
+
+        if (item.variantOf) {
+          const variantSpan = document.createElement('span');
+          variantSpan.style.marginLeft = '10px';
+          variantSpan.textContent = '亜種';
+          meta.appendChild(variantSpan);
         }
 
         body.appendChild(meta);
@@ -2389,16 +2471,35 @@
 
         const titles = {
           symbols: ['記号アーカイブ', '提供：世界記号統一団体'],
+          symbolVariants: ['記号亜種アーカイブ', '提供：世界記号統一団体・亜種管理局'],
           cases: ['事案アーカイブ', '提供：記録保全課'],
-          orgs: ['組織アーカイブ', '提供：世界記号統一団体・組織監査室']
+          orgs: ['組織アーカイブ', '提供：世界記号統一団体・組織監査室'],
+          survey: ['アンケート', 'ご意見・感想を送る専用タブ']
         };
 
         if ($('archive-display-title')) $('archive-display-title').innerText = titles[name]?.[0] || 'アーカイブ';
         if ($('archive-subtitle')) $('archive-subtitle').innerText = titles[name]?.[1] || '';
 
-        if ($('type-filter')) $('type-filter').value = name;
+        const searchBox = $('search-box-container');
+        const list = $('archive-list');
+        const surveyPanel = $('survey-panel');
+        const noResults = $('no-results');
+        const endNote = $('archive-end-note');
+
+        const isSurvey = name === 'survey';
+
+        if (searchBox) searchBox.style.display = isSurvey ? 'none' : 'flex';
+        if (list) list.style.display = isSurvey ? 'none' : 'grid';
+        if (surveyPanel) surveyPanel.style.display = isSurvey ? 'block' : 'none';
+        if (noResults) noResults.style.display = 'none';
+        if (endNote) endNote.style.display = isSurvey ? 'none' : 'block';
+
+        if (!isSurvey && $('type-filter')) {
+          $('type-filter').value = (name === 'symbols' || name === 'symbolVariants') ? 'all' : name;
+        }
+
         updateTabButtons();
-        renderCurrentArchive();
+        if (!isSurvey) renderCurrentArchive();
         showScreen('main-contents');
       }
 
@@ -2406,23 +2507,12 @@
          ストーリー / 詳細
       ========================= */
       function openStoryModal(item) {
-        const modal = $('story-modal');
-        const titleEl = $('story-modal-title');
-        const textEl = $('story-modal-text');
-        if (!modal || !titleEl || !textEl) return;
-
-        const title = item.name || item.title || item.id || '記録';
-        const body = item.type === 'symbols'
-          ? `${item.summary || ''}${item.detail ? `<br><br>${item.detail}` : ''}`
-          : `${item.summary || item.detail || ''}`;
-
-        titleEl.innerText = title;
-        textEl.innerHTML = `<div class="detail-record"><strong>${escapeHtml(title)}</strong><br><br>${escapeHtmlWithBr(body)}</div>`;
-        setModal('story-modal', true);
+        if (!item) return;
+        openUnifiedDetail(item.type, item.id);
       }
 
       function closeStoryModal() {
-        setModal('story-modal', false);
+        closeDetailModal();
       }
 
       function renderDangerBanner(danger) {
@@ -2448,12 +2538,21 @@
 
         const tags = (item.tags || []).map(t => `<span class="tag-badge">${escapeHtml(t)}</span>`).join('');
         const incidents = getIncidentObjectsByIds(item.incidentIds);
+        const variants = item.type === 'symbols'
+          ? (state.db.symbols || []).filter(sym => String(sym.variantOf || '') === String(item.id))
+          : [];
+        const parentItem = item.variantOf ? getItemById('symbols', item.variantOf) : null;
 
         let html = renderDangerBanner(item.danger);
         html += `<div style="margin-top:14px;"><strong>名称：</strong>${escapeHtml(item.name || item.title || '')}</div>`;
         html += `<div><strong>ID：</strong>${escapeHtml(item.id || '')}</div>`;
         html += `<div><strong>作者：</strong>${escapeHtml(item.author || '')}</div>`;
         if (item.reading) html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
+        if (item.variantOf) {
+          const label = parentItem ? `${parentItem.name || parentItem.title || parentItem.id} (${parentItem.id})` : item.variantOf;
+          html += `<div><strong>元の記号：</strong>${makeLinkChip('symbols', item.variantOf, label)}</div>`;
+          html += `<div style="margin-top:8px;"><strong>亜種メモ：</strong>仕様はほぼ同じです。見た目の差分を中心に扱います。</div>`;
+        }
         if (item.org) html += `<div><strong>所属 / 組織：</strong>${escapeHtml(item.org)}</div>`;
         if (item.activity) html += `<div><strong>活動：</strong>${escapeHtml(item.activity)}</div>`;
         if (item.level) html += `<div><strong>レベル：</strong>${escapeHtml(item.level)}</div>`;
@@ -2469,18 +2568,34 @@
         if (tags) html += `<div style="margin-top:10px;"><strong>タグ：</strong>${tags}</div>`;
 
         if (item.relatedsymbols?.length) {
-          html += `<hr><div><strong>関連記号：</strong>${resolveLinkedItems('symbols', item.relatedsymbols).map(v => `<span class="tag-badge">${escapeHtml(v)}</span>`).join(' ')}</div>`;
+          html += `<hr><div><strong>関連記号：</strong>${item.relatedsymbols.map(id => {
+            const rel = getItemById('symbols', id);
+            const label = rel ? `${rel.name || rel.title || rel.id} (${rel.id})` : String(id);
+            return makeLinkChip('symbols', id, label);
+          }).join(' ')}</div>`;
         }
         if (item.relatedCases?.length) {
-          html += `<div><strong>関連事案：</strong>${resolveLinkedItems('cases', item.relatedCases).map(v => `<span class="tag-badge">${escapeHtml(v)}</span>`).join(' ')}</div>`;
+          html += `<div style="margin-top:10px;"><strong>関連事案：</strong>${makeCaseLinks(item.relatedCases)}</div>`;
         }
         if (item.relatedOrgs?.length) {
-          html += `<div><strong>関連組織：</strong>${resolveLinkedItems('orgs', item.relatedOrgs).map(v => `<span class="tag-badge">${escapeHtml(v)}</span>`).join(' ')}</div>`;
+          html += `<div style="margin-top:10px;"><strong>関連組織：</strong>${item.relatedOrgs.map(id => {
+            const rel = getItemById('orgs', id);
+            const label = rel ? `${rel.name || rel.title || rel.id} (${rel.id})` : String(id);
+            return makeLinkChip('orgs', id, label);
+          }).join(' ')}</div>`;
+        }
+
+        if (variants.length) {
+          html += `<hr><div><strong>登録済みの亜種：</strong></div>`;
+          html += `<div class="chips-row">${variants.map(v => makeLinkChip('symbols', v.id, `${v.name || v.title || v.id} (${v.id})`)).join('')}</div>`;
         }
 
         if (incidents.length) {
           html += '<hr><div><strong>事案記録：</strong></div>';
           incidents.forEach(inc => {
+            const relatedAction = inc.relatedType && inc.relatedId
+              ? `<div style="margin-top:10px;"><button class="menu-button" type="button" onclick="openLinkedItem('${escapeAttr(inc.relatedType)}','${escapeAttr(inc.relatedId)}')">関連事案を開く</button></div>`
+              : '';
             html += `
           <div class="detail-record" style="margin-top:10px;">
             <strong>${escapeHtml(inc.title || inc.id)}</strong><br>
@@ -2488,6 +2603,7 @@
             <span>危険度: ${dangerLabel(inc.severity)}</span><br>
             <div style="margin-top:6px;">${escapeHtmlWithBr(inc.summary || '')}</div>
             <div style="margin-top:6px;">${escapeHtmlWithBr(inc.detail || '')}</div>
+            ${relatedAction}
           </div>
         `;
           });
@@ -2587,14 +2703,18 @@
           const item = getItemById(card.dataset.archiveType, card.dataset.id);
           if (!item) return;
 
+          const danger = String(card.dataset.danger || 'blue').toLowerCase();
+          const warningsDisabled = localStorage.getItem('disable-warnings') === 'true';
           const imgClicked = ev.target.closest('.symbol') || ev.target.closest('.card-thumb');
+
           if (imgClicked) {
+            if (danger === 'red' && !warningsDisabled) {
+              openWarningFlow(item);
+              return;
+            }
             openStoryModal(item);
             return;
           }
-
-          const danger = String(card.dataset.danger || 'blue').toLowerCase();
-          const warningsDisabled = localStorage.getItem('disable-warnings') === 'true';
 
           if (danger === 'red' && !warningsDisabled) {
             openWarningFlow(item);
@@ -2617,12 +2737,199 @@
       }
 
       /* =========================
-         編集機能は削除
+         レコード編集 / 亜種登録
       ========================= */
-      window.openEditor = () => { };
-      window.closeEditor = () => { };
-      window.saveEditor = () => { };
-      window.openEditorFromCurrent = () => { };
+      function editorField(id) {
+        return $(id);
+      }
+
+      function setEditorValue(id, value) {
+        const el = editorField(id);
+        if (el) el.value = value ?? '';
+      }
+
+      function getEditorValue(id) {
+        return String(editorField(id)?.value || '').trim();
+      }
+
+      function nextSeq(type) {
+        const list = state.db[type] || [];
+        return list.length ? Math.max(...list.map(x => Number(x.seq || 0))) + 1 : 1;
+      }
+
+      function collectEditorTags() {
+        return splitCsv(getEditorValue('edit-tags'));
+      }
+
+      function fillEditorForm(item = {}, context = {}) {
+        setEditorValue('edit-type', item.type || context.type || 'symbols');
+        setEditorValue('edit-id', item.id || '');
+        setEditorValue('edit-name', item.name || item.title || '');
+        setEditorValue('edit-author', item.author || '');
+        setEditorValue('edit-danger', item.danger || 'blue');
+        setEditorValue('edit-image', item.image || '');
+        setEditorValue('edit-tags', joinCsv(item.tags || []));
+        setEditorValue('edit-summary', item.summary || '');
+        setEditorValue('edit-detail', item.detail || '');
+        setEditorValue('edit-reading', item.reading || '');
+        setEditorValue('edit-origin', item.origin || '');
+        setEditorValue('edit-usage', item.usage || '');
+        setEditorValue('edit-activity', item.activity || '');
+        setEditorValue('edit-date', item.date || '');
+        const relatedUnion = [
+          ...(item.relatedsymbols || []),
+          ...(item.relatedCases || []),
+          ...(item.relatedOrgs || [])
+        ];
+        setEditorValue('edit-related', joinCsv(relatedUnion));
+        setEditorValue('edit-incident-ids', joinCsv(item.incidentIds || []));
+        setEditorValue('edit-parent-id', item.variantOf || context.parentId || '');
+        if (editorField('edit-related')) {
+          editorField('edit-related').placeholder = 'SYM-001, CAS-001, ORG-001';
+        }
+      }
+
+      function openEditor(item = null, context = {}) {
+        state.editorContext = {
+          mode: context.mode || (item?.id ? 'edit' : 'new'),
+          parentId: context.parentId || '',
+          sourceId: context.sourceId || ''
+        };
+
+        const type = item?.type || context.type || $('type-filter')?.value || 'symbols';
+        if ($('editor-title')) {
+          $('editor-title').innerText = state.editorContext.mode === 'variant'
+            ? '亜種を登録'
+            : state.editorContext.mode === 'edit'
+              ? 'レコード編集'
+              : 'レコード追加';
+        }
+
+        fillEditorForm(item || { type }, context);
+        setModal('editor-modal', true);
+      }
+
+      // 作者が亜種を追加するとき、親記号の設定を引き継いだ下書きを開く
+      function openVariantEditor(parentOrId) {
+        const parent = typeof parentOrId === 'string' ? getItemById('symbols', parentOrId) : parentOrId;
+        if (!parent) return;
+
+        const draft = {
+          type: 'symbols',
+          name: `${parent.name || parent.title || '記号'}（亜種）`,
+          author: parent.author || '',
+          danger: parent.danger || 'blue',
+          image: parent.image || '',
+          tags: parent.tags || [],
+          summary: parent.summary || '',
+          detail: parent.detail || '',
+          reading: parent.reading || '',
+          origin: parent.origin || '',
+          usage: parent.usage || '',
+          incidentIds: parent.incidentIds || [],
+          variantOf: parent.id,
+          relatedCases: parent.relatedCases || [],
+          relatedOrgs: parent.relatedOrgs || [],
+          relatedsymbols: parent.relatedsymbols || []
+        };
+        openEditor(draft, { mode: 'variant', type: 'symbols', parentId: parent.id, sourceId: parent.id });
+      }
+
+      function closeEditor() {
+        setModal('editor-modal', false);
+        state.editorContext = null;
+      }
+
+      function saveEditor() {
+        const type = getEditorValue('edit-type') || 'symbols';
+        const id = getEditorValue('edit-id');
+        const name = getEditorValue('edit-name');
+        const author = getEditorValue('edit-author');
+        const danger = ['blue', 'yellow', 'red'].includes(getEditorValue('edit-danger')) ? getEditorValue('edit-danger') : 'blue';
+        const image = getEditorValue('edit-image');
+        const tags = collectEditorTags();
+        const summary = getEditorValue('edit-summary');
+        const detail = getEditorValue('edit-detail');
+        const reading = getEditorValue('edit-reading');
+        const origin = getEditorValue('edit-origin');
+        const usage = getEditorValue('edit-usage');
+        const activity = getEditorValue('edit-activity');
+        const date = getEditorValue('edit-date');
+        const relatedRaw = splitCsv(getEditorValue('edit-related'));
+        const relatedsymbols = relatedRaw.filter(id => inferTypeById(id) === 'symbols');
+        const relatedCases = relatedRaw.filter(id => inferTypeById(id) === 'cases');
+        const relatedOrgs = relatedRaw.filter(id => inferTypeById(id) === 'orgs');
+        const incidentIds = splitCsv(getEditorValue('edit-incident-ids'));
+        const variantOf = getEditorValue('edit-parent-id');
+
+        const targetList = state.db[type];
+        if (!Array.isArray(targetList)) {
+          alert('種類の保存先が見つかりません。');
+          return;
+        }
+
+        const recordId = id || uid(type === 'cases' ? 'CAS' : type === 'orgs' ? 'ORG' : type === 'incidents' ? 'INC' : 'SYM');
+        const existingIndex = targetList.findIndex(x => String(x.id) === String(recordId));
+
+        const base = existingIndex >= 0 ? { ...targetList[existingIndex] } : { id: recordId, seq: nextSeq(type), type, createdAt: nowStamp() };
+
+        const updated = {
+          ...base,
+          id: recordId,
+          seq: Number(base.seq || nextSeq(type)),
+          type,
+          name,
+          author,
+          danger,
+          image,
+          tags,
+          summary,
+          detail,
+          reading,
+          origin,
+          usage,
+          activity,
+          date,
+          incidentIds,
+          updatedAt: nowStamp()
+        };
+
+        updated.relatedsymbols = relatedsymbols;
+        updated.relatedCases = relatedCases;
+        updated.relatedOrgs = relatedOrgs;
+        updated.variantOf = type === 'symbols' ? variantOf : '';
+
+        if (type === 'orgs') {
+          updated.activity = activity;
+        }
+
+        if (type === 'cases') {
+          updated.date = date;
+        }
+
+        if (existingIndex >= 0) targetList[existingIndex] = updated;
+        else targetList.push(updated);
+
+        saveDB();
+        initAuthorFilter();
+        initTagFilter();
+        renderCurrentArchive();
+        closeEditor();
+
+        if (type === 'symbols') {
+          openUnifiedDetail('symbols', recordId);
+        }
+      }
+
+      window.openEditor = openEditor;
+      window.closeEditor = closeEditor;
+      window.saveEditor = saveEditor;
+      window.openEditorFromCurrent = () => {
+        const current = state.currentItem;
+        if (!current) return;
+        openEditor(current, { mode: 'edit', type: current.type });
+      };
+      window.openVariantEditor = openVariantEditor;
 
       /* =========================
          DB入出力
@@ -2680,6 +2987,7 @@
         initDelegatedEvents();
         initAuthorFilter();
         initTagFilter();
+        if ($('edit-parent-id')) $('edit-parent-id').value = '';
         renderCurrentArchive();
         updateTabButtons();
       }
@@ -2712,6 +3020,7 @@
       window.openAbout = openAbout;
       window.closeAbout = closeAbout;
       window.closeDetailModal = closeDetailModal;
+      window.openLinkedItem = openLinkedItem;
       window.closeStoryModal = closeStoryModal;
       window.exportDatabase = exportDatabase;
       window.importDatabase = importDatabase;
