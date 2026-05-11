@@ -81,6 +81,7 @@
       --card-shadow-hover: 0 16px 30px rgba(0, 0, 0, 0.18);
       --chip-bg: #efe1be;
       --chip-text: #5d4037;
+      --main-font: "2045alphabet", "Hiragino Mincho ProN", serif;
     }
 @font-face {
   font-family: '2045alphabet';
@@ -90,7 +91,7 @@
 
 
     body {
-      font-family: "2045alphabet", "Hiragino Mincho ProN", serif;
+      font-family: var(--main-font);
       background: var(--bg-color);
       background-image: var(--paper-texture);
       color: var(--text-color);
@@ -849,6 +850,22 @@
       onclick="toggleSideMenu()">×</button>
     <h3 style="border-bottom:1px solid var(--border-color); padding-bottom:8px;">高度な設定 & データベース</h3>
 
+
+    <div class="setting-group">
+      <span class="setting-label">フォント</span>
+      <select id="font-select" class="setting-control" onchange="setFont(this.value)">
+        <optgroup label="標準">
+          <option value="default">2045alphabet</option>
+          <option value="mincho">明朝</option>
+          <option value="gothic">ゴシック</option>
+        </optgroup>
+        <optgroup label="見やすい表示">
+          <option value="sans">サンセリフ</option>
+          <option value="mono">等幅</option>
+        </optgroup>
+      </select>
+    </div>
+
     <div class="setting-group">
       <span class="setting-label">外観（テーマ）</span>
       <select id="theme-select" class="setting-control" onchange="setTheme(this.value)">
@@ -1249,6 +1266,16 @@
         '視覚情報をレンダリング中...',
         '準備が整いました。'
       ];
+
+      // フォント切り替え用の定義。
+      // ここに1行追加するだけで、あとからフォント候補を増やしやすくしています。
+      const FONT_PRESETS = {
+        default: '"2045alphabet", "Hiragino Mincho ProN", serif',
+        mincho: '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif',
+        gothic: '"Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
+        sans: '"Arial", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
+        mono: '"Courier New", "Consolas", "Cascadia Mono", monospace'
+      };
 
       /* =========================
          共通ユーティリティ
@@ -1947,6 +1974,7 @@
       function loadSettings() {
         const defaults = {
           appTheme: 'light',
+          fontKey: 'default',
           alwaysSkipLoading: false,
           disableWarnings: false,
           archiveName: '記号アーカイブ',
@@ -2049,8 +2077,17 @@
         if ($('theme-select')) $('theme-select').value = theme;
       }
 
+      function setFont(fontKey) {
+        const fontValue = FONT_PRESETS[fontKey] || FONT_PRESETS.default;
+        state.settings.fontKey = fontKey in FONT_PRESETS ? fontKey : 'default';
+        document.documentElement.style.setProperty('--main-font', fontValue);
+        saveSettings();
+        if ($('font-select')) $('font-select').value = state.settings.fontKey;
+      }
+
       function applySavedSettings() {
         setTheme(state.settings.appTheme || 'light');
+        setFont(state.settings.fontKey || 'default');
         if ($('always-skip-toggle')) $('always-skip-toggle').checked = !!state.settings.alwaysSkipLoading;
         if ($('disable-warning-toggle')) $('disable-warning-toggle').checked = !!state.settings.disableWarnings;
         if ($('archive-name-input')) $('archive-name-input').value = state.settings.archiveName || '記号アーカイブ';
@@ -3014,6 +3051,7 @@
       ========================= */
       window.toggleSideMenu = toggleSideMenu;
       window.setTheme = setTheme;
+      window.setFont = setFont;
       window.updateViewSettings = updateViewSettings;
       window.updateArchiveName = updateArchiveName;
       window.saveWarningSetting = saveWarningSetting;
