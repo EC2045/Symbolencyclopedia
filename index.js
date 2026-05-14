@@ -39,7 +39,7 @@
         gothic: '"Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
         sans: '"Arial", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
         mono: '"Courier New", "Consolas", "Cascadia Mono", monospace',
-        wingdings:'"Wingdings", "Zapf Dingbats", "Wingdings", "2045alphabet", "Hiragino Mincho ProN"'
+        wingdings:'"Wingdings", "Zapf Dingbats"'
       };
 
       /* =========================
