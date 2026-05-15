@@ -38,8 +38,8 @@
         mincho: '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif',
         gothic: '"Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
         sans: '"Arial", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
-        mono: '"Courier New", "Consolas", "Cascadia Mono", monospace',
-        wingdings:'"Wingdings", "Zapf Dingbats"'
+        mono:  '"Courier New", "Consolas", "Cascadia Mono", monospace',
+        acs:'"ACS FONT","2045alphabet", "Hiragino Mincho ProN", serif '
       };
 
       /* =========================
