@@ -61,6 +61,11 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'ACS FONT';
+  src: url('https://ec2045.github.io/2045font/ACS FONT.otf') format('opentype');
+  font-display: swap;
+}
 
     body {
       font-family: var(--main-font);
