@@ -1,6 +1,6 @@
 (() => {
       'use strict';
-
+      const imagebaseurl = "https://ec2045.github.io/symbols/"
       const $ = (id) => document.getElementById(id);
 
       const STORAGE_DB = 'kakumon-db-v4';
@@ -673,7 +673,7 @@
           danger: ['blue', 'yellow', 'red'].includes(String(item.danger || 'blue').toLowerCase())
             ? String(item.danger).toLowerCase()
             : 'blue',
-          image: String(item.image || ''),
+          image: String(imagebaseurl+item.image || ''),
           reading: String(item.reading || ''),
           summary: String(item.summary || ''),
           detail: String(item.detail || ''),
