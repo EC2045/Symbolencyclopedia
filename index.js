@@ -1161,7 +1161,7 @@
           thumb.className = 'card-thumb';
 
           const img = document.createElement('img');
-          img.src = String(item.image);
+          img.src = String(imagebaseurl+item.image);
           img.alt = title;
           img.loading = 'lazy';
           img.decoding = 'async';
@@ -1575,7 +1575,7 @@
         setEditorValue('edit-name', item.name || item.title || '');
         setEditorValue('edit-author', item.author || '');
         setEditorValue('edit-danger', item.danger || 'blue');
-        setEditorValue('edit-image', item.image || '');
+        setEditorValue('edit-image', imagebaseurl+item.image || '');
         setEditorValue('edit-tags', joinCsv(item.tags || []));
         setEditorValue('edit-summary', item.summary || '');
         setEditorValue('edit-detail', item.detail || '');
@@ -1627,7 +1627,7 @@
           name: `${parent.name || parent.title || '記号'}（亜種）`,
           author: parent.author || '',
           danger: parent.danger || 'blue',
-          image: parent.image || '',
+          image: imagebaseurl+parent.image || '',
           tags: parent.tags || [],
           summary: parent.summary || '',
           detail: parent.detail || '',
