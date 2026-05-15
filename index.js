@@ -1,6 +1,6 @@
 (() => {
       'use strict';
-      const imagebaseurl = "https://ec2045.github.io/symbols"
+      const imagebaseurl = "https://ec2045.github.io/symbols/"
       const $ = (id) => document.getElementById(id);
 
       const STORAGE_DB = 'kakumon-db-v4';
