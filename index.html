@@ -13,19 +13,19 @@
   <meta property="og:title" content="架空疑問展 | 記号アーカイブ（DB版）" />
   <meta property="og:description" content="架空の記号・事案・組織を集めた図鑑型アーカイブ。危険度やタグで検索し、詳細記録を閲覧できます。" />
   <meta property="og:url" content="https://ec2045.github.io/Symbolencyclopedia/" />
-  <meta property="og:image" content="https://ec2045.github.io/Symbolencyclopedia/symbols/疑問図鑑_000.png" />
-  <meta property="og:image:secure_url" content="https://ec2045.github.io/Symbolencyclopedia/symbols/疑問図鑑_000.png" />
+  <meta property="og:image" content="https://ec2045.github.io/symbols/疑問図鑑_000.png" />
+  <meta property="og:image:secure_url" content="https://ec2045.github.io/symbols/疑問図鑑_000.png" />
   <meta property="og:image:alt" content="架空疑問展のトップ画像" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="架空疑問展 | 記号アーカイブ（DB版）" />
   <meta name="twitter:description" content="架空の記号・事案・組織を集めた図鑑型アーカイブ。危険度やタグで検索し、詳細記録を閲覧できます。" />
-  <meta name="twitter:image" content="https://ec2045.github.io/Symbolencyclopedia/symbols/疑問図鑑_000.png" />
+  <meta name="twitter:image" content="https://ec2045.github.io/symbols/疑問図鑑_000.png" />
   <meta name="theme-color" content="#516ab6" />
   <title>架空疑問展 | 記号アーカイブ（DB版）</title>
-  <link rel="icon" href="symbols/疑問図鑑_000.png" />
-     <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://ec2045.github.io/symbols/疑問図鑑_000.png" />
+  <link rel="stylesheet" href="style.css">
   <style>
 
   </style>
@@ -56,7 +56,7 @@
           <option value="sans">サンセリフ</option>
           <option value="mono">等幅</option>
         </optgroup>
-                <optgroup label="読みずらい字体">
+        <optgroup label="読みずらい字体">
           <option value="acs">ACS FONT</option>
 
         </optgroup>
@@ -215,7 +215,8 @@
 
     <div id="archive-tabs">
       <button class="menu-button archive-tab active" data-archive="symbols" onclick="showArchive('symbols')">記号</button>
-      <button class="menu-button archive-tab" data-archive="symbolVariants" onclick="showArchive('symbolVariants')">記号亜種</button>
+      <button class="menu-button archive-tab" data-archive="symbolVariants"
+        onclick="showArchive('symbolVariants')">記号亜種</button>
       <button class="menu-button archive-tab" data-archive="cases" onclick="showArchive('cases')">事案</button>
       <button class="menu-button archive-tab" data-archive="orgs" onclick="showArchive('orgs')">組織</button>
       <button class="menu-button archive-tab" data-archive="survey" onclick="showArchive('survey')">アンケート</button>
@@ -248,7 +249,10 @@
       <div class="detail-record" style="padding:18px;">
         <h2 style="margin-top:0;">📝 アンケート</h2>
         <p>ご意見や感想はこちらから送れます。</p>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc2cBVRTEts49v5W-jum2-fp77d9r9p_Oald5ISiRF2cYSgXA/viewform?embedded=true" width="640" height="542" frameborder="0" marginheight="0" marginwidth="0" style="width:100%; height:542px; border:0; display:block;">Loading…</iframe>
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSc2cBVRTEts49v5W-jum2-fp77d9r9p_Oald5ISiRF2cYSgXA/viewform?embedded=true"
+          width="640" height="542" frameborder="0" marginheight="0" marginwidth="0"
+          style="width:100%; height:542px; border:0; display:block;">Loading…</iframe>
       </div>
     </div>
 
@@ -429,6 +433,14 @@
       </div>
     </div>
   </div>
-     <script src="index.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/db_io.js"></script>
+  <script src="js/main.js"></script>
 </body>
+
 </html>

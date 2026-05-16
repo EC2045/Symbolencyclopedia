@@ -2,6 +2,10 @@
       box-sizing: border-box;
     }
 
+    input, button, select, textarea {
+      font-family: inherit;
+    }
+
     pre {
       white-space: pre-wrap;
       word-break: break-word;
