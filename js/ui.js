@@ -581,7 +581,7 @@ function openUnifiedDetail(type, id) {
   if (item.date) html += `<div><strong>日付：</strong>${escapeHtml(item.date)}</div>`;
   if (item.origin) html += `<div style="margin-top:8px;"><strong>由来：</strong><br>${escapeHtmlWithBr(item.origin)}</div>`;
   if (item.usage) html += `<div><strong>用途：</strong><br>${escapeHtmlWithBr(item.usage)}</div>`;
-  if (item.example) html += `<div style="margin-top:8px;"><strong>使用例：</strong><br>${escapeHtmlWithBr(item.example)}</div>`;
+  if (item.example) html += `<div style="margin-top:8px;"><strong>使用例：</strong><br>${item.example.replace(/\n/g, '<br>')}</div>`;
   if (item.summary) html += `<div style="margin-top:8px;"><strong>概要：</strong><br>${escapeHtmlWithBr(item.summary)}</div>`;
   if (item.detail) html += `<div style="margin-top:8px;"><strong>詳細：</strong><br>${escapeHtmlWithBr(item.detail)}</div>`;
   if (tags) html += `<div style="margin-top:10px;"><strong>タグ：</strong>${tags}</div>`;

@@ -78,8 +78,22 @@ if (scpAcceptBtn) {
 
 if (scpCancelBtn) {
   scpCancelBtn.addEventListener('click', () => {
-    setModal('scp-warning', false);
-    showScreen('home-screen');
+    // ホラー演出
+    document.body.classList.add('crash-mode');
+    scpCancelBtn.textContent = '逃 ガ サ ナ イ';
+    
+    const glitchText = document.createElement('div');
+    glitchText.className = 'crash-text';
+    glitchText.innerHTML = 'アクセス拒否<br>キャンセルは無効化されました';
+    document.body.appendChild(glitchText);
+
+    setTimeout(() => {
+      document.body.classList.remove('crash-mode');
+      glitchText.remove();
+      scpCancelBtn.textContent = 'キャンセル（トップ）';
+      setModal('scp-warning', false);
+      showScreen('home-screen');
+    }, 2500);
   });
 }
 

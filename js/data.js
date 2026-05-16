@@ -287,7 +287,7 @@ function createDefaultDB() {
         detail: 'かすれて今にも消えそうな「？」。長年放置された未解決の問いや、老化によって意味を失いかけた疑問。',
         origin: '風化した墓碑銘の文字。',
         usage: '思い出せない問い、風化。', tags: ['記憶', '無常'],
-        example: 'そうそうタイプしてるならHが抜けるはずがないとか話してたっけ:忘却疑問符:\n音声入力でしてるのだからH発音抜かしてしまう。(ソース:<a href=\'https://ec2045.github.io/rittu-blog/\' target=\'_blank\'>https://ec2045.github.io/rittu-blog/</a>)',
+        example: 'そうそうタイプしてるならHが抜けるはずがないとか話してたっけ:忘却疑問符:\n音声入力でしてるのだからH発音抜かしてしまう。(ソース:<a href=\'https://ec2045.github.io/rittu-blog/\' target=\'_blank\'>Rittsu blog</a>)',
         createdAt: nowStamp(), updatedAt: nowStamp()
       },
       {

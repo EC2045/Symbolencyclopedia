@@ -2,7 +2,10 @@
       box-sizing: border-box;
     }
 
-    input, button, select, textarea {
+    input,
+    button,
+    select,
+    textarea {
       font-family: inherit;
     }
 
@@ -59,17 +62,18 @@
       --chip-text: #5d4037;
       --main-font: "2045alphabet", "Hiragino Mincho ProN", serif;
     }
-@font-face {
-  font-family: '2045alphabet';
-  src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
-  font-display: swap;
-}
 
-@font-face {
-  font-family: 'ACS FONT';
-  src: url('https://ec2045.github.io/2045font/ACS FONT.otf') format('opentype');
-  font-display: swap;
-}
+    @font-face {
+      font-family: '2045alphabet';
+      src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'ACS FONT';
+      src: url('https://ec2045.github.io/2045font/ACS FONT.otf') format('opentype');
+      font-display: swap;
+    }
 
     body {
       font-family: var(--main-font);
@@ -815,4 +819,68 @@
       .archive-card {
         min-height: auto;
       }
+    }
+
+    @keyframes glitch-anim {
+      0% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+      }
+
+      20% {
+        transform: translate(-4px, 4px);
+        filter: hue-rotate(90deg) invert(0.8);
+      }
+
+      40% {
+        transform: translate(-4px, -4px);
+        filter: hue-rotate(180deg) invert(1);
+      }
+
+      60% {
+        transform: translate(4px, 4px);
+        filter: hue-rotate(270deg) invert(0.5);
+      }
+
+      80% {
+        transform: translate(4px, -4px);
+        filter: hue-rotate(360deg) invert(1);
+      }
+
+      100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+      }
+    }
+
+    .crash-mode {
+      animation: glitch-anim 0.15s infinite;
+      background-color: #000 !important;
+      color: #ff0000 !important;
+      pointer-events: none;
+    }
+
+    .crash-mode * {
+      color: #ff0000 !important;
+      border-color: #ff0000 !important;
+      text-shadow: 2px 0 red, -2px 0 blue;
+    }
+
+    .crash-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-family: 'Noto Serif JP', serif;
+      color: #ff0000;
+      font-weight: bold;
+      text-shadow: 4px 4px 0px blue, -4px -4px 0px green;
+      z-index: 99999;
+      text-align: center;
+      line-height: 1.5;
+      letter-spacing: 0.1em;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border: 2px dashed red;
     }
