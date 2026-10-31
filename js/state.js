@@ -32,7 +32,8 @@
       // フォント切り替え用の定義。
       // ここに1行追加するだけで、あとからフォント候補を増やしやすくしています。
       const FONT_PRESETS = {
-        default: '"2045alphabet", "Hiragino Mincho ProN", serif',
+        default: '"Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif',
+        onva: '"2045alphabet", "Hiragino Mincho ProN", serif',
         mincho: '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif',
         gothic: '"Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
         sans: '"Arial", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif',
