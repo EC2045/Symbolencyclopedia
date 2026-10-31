@@ -216,11 +216,63 @@ const POLISHED_ENGLISH_NAMES = Object.freeze({
   "BIB": "BIB"
 });
 
+const EASY_ARCHIVE_NAMES = Object.freeze({
+  "句点和疑問符": "にほんのはてな",
+  "句点和疑問符（亜種）": "にほんのはてな（べつの形）",
+  "句点和感嘆符": "にほんのびっくり",
+  "句点和感嘆符（亜種）": "にほんのびっくり（べつの形）",
+  "疲感嘆符": "つかれたびっくり",
+  "感嘆謝符": "ありがとうのしるし",
+  "読点和疑問符": "てんのはてな",
+  "読点和感嘆符": "てんのびっくり",
+  "超疑問符": "すごいはてな",
+  "超疑問符（亜種）": "すごいはてな（べつの形）",
+  "二重否符": "二回のちがう",
+  "似煮符": "にている・にる",
+  "俯瞰符": "上から見るしるし",
+  "不完全疑問符": "こたえがいらないはてな",
+  "ハイパーピリオド": "ぜったいに終わりのまる",
+  "不透明疑問符": "ぼんやりしたはてな",
+  "検閲符": "かくされたしるし",
+  "真実 of 鍵": "こたえのかぎ",
+  "ベタクラメーション": "あとからびっくり",
+  "PCの究極権利": "パソコンのすごい権限",
+  "デジタル バーンアウト": "ネットづかれ",
+  "ゼット サンド": "ぐるぐる考えるしるし",
+  "アット：β": "ずっと開発中",
+  "多層疑問符": "かさなったはてな",
+  "破裂感嘆符": "はじけるびっくり",
+  "迷宮疑問符": "めいろのはてな",
+  "静寂感嘆符": "しずかなびっくり",
+  "断片疑問符": "かけらのはてな",
+  "共鳴感嘆符": "ひびきあうびっくり",
+  "透過疑問符": "すきとおるはてな",
+  "束縛感嘆符": "しばるびっくり",
+  "浸透疑問符": "しみこむはてな",
+  "閃光感嘆符": "ひかるびっくり",
+  "忘却疑問符": "わすれるはてな",
+  "反響感嘆符": "はねかえるびっくり",
+  "未完疑問符": "おわらないはてな",
+  "極小感嘆符": "とても小さなびっくり",
+  "無限疑問符": "ずっとつづくはてな",
+  "不完全超立方体": "ふしぎな形のかたまり",
+  "事案007-A": "できごと007-A",
+  "事案012-A": "できごと012-A",
+  "事案014-A": "できごと014-A",
+  "事案007-014-A": "できごと007-014-A",
+  "架空疑問展": "ふしぎな はてなの てんじ",
+  "世界記号統一団体": "世界の記号をまとめる団体",
+  "同一アート作家 R": "アートをつくる人 R",
+  "CED財団": "CED財団",
+  "NodeLABO": "NodeLABO",
+  "BIB": "BIB"
+});
+
 function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
   const language = document.documentElement.dataset.language || document.documentElement.lang;
   if (language === 'ja' || language === 'ja-old') return japanese;
-  if (language === 'ja-easy') return japanese === '句点和疑問符' ? 'にほんのはてな' : japanese;
+  if (language === 'ja-easy') return EASY_ARCHIVE_NAMES[japanese] || japanese;
   if (language === 'zh') {
     const chinese = item?.nameZh || CHINESE_ARCHIVE_NAMES[japanese];
     return chinese ? `${chinese}（${japanese}）` : japanese;
@@ -821,7 +873,7 @@ function openUnifiedDetail(type, id) {
   if (item.date) html += `<div><strong>日付：</strong>${escapeHtml(item.date)}</div>`;
   if (item.origin) html += `<div style="margin-top:8px;"><strong>由来：</strong><br>${escapeHtmlWithBr(item.origin)}</div>`;
   if (item.usage) html += `<div><strong>用途：</strong><br>${escapeHtmlWithBr(item.usage)}</div>`;
-  if (item.example) html += `<div style="margin-top:8px;"><strong>使用例：</strong><br>${item.example.replace(/\n/g, '<br>')}</div>`;
+  if (item.example) html += `<div style="margin-top:8px;"><strong>使用例：</strong><br>${escapeHtmlWithBr(item.example)}</div>`;
   if (item.summary) html += `<div style="margin-top:8px;"><strong>概要：</strong><br>${escapeHtmlWithBr(item.summary)}</div>`;
   if (item.detail) html += `<div style="margin-top:8px;"><strong>詳細：</strong><br>${escapeHtmlWithBr(item.detail)}</div>`;
   if (tags) html += `<div style="margin-top:10px;"><strong>タグ：</strong>${tags}</div>`;
@@ -917,7 +969,7 @@ function initWarningHandlers() {
 
   if (finalInput) {
     finalInput.addEventListener('input', () => {
-      if (finalBtn) finalBtn.disabled = (finalInput.value.trim() !== (document.documentElement.lang === 'en' ? 'VIEW' : '閲覧'));
+      if (finalBtn) finalBtn.disabled = (finalInput.value.trim() !== (document.documentElement.dataset.language === 'ja-easy' ? '見る' : ['en', 'zh', 'eo'].includes(document.documentElement.dataset.language) ? 'VIEW' : '閲覧'));
     });
   }
 
