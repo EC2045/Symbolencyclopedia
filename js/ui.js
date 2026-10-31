@@ -61,6 +61,109 @@ const ENGLISH_ARCHIVE_NAMES = Object.freeze({
   "BIB": "BIB"
 });
 
+const CHINESE_ARCHIVE_NAMES = Object.freeze({
+  "句点和疑問符": "句点问号·库腾瓦基蒙符",
+  "句点和疑問符（亜種）": "句点问号·库腾瓦基蒙符（变体）",
+  "句点和感嘆符": "句点惊叹符·库腾坎坦符",
+  "句点和感嘆符（亜種）": "句点惊叹符·库腾坎坦符（变体）",
+  "疲感嘆符": "疲惫惊叹符·兰坦符",
+  "感嘆謝符": "致谢惊叹符·坎坦谢符",
+  "読点和疑問符": "逗号问号符",
+  "読点和感嘆符": "逗号惊叹符",
+  "超疑問符": "深渊疑问符·超问符",
+  "超疑問符（亜種）": "深渊疑问符·超问符（变体）",
+  "二重否符": "双重否定符",
+  "似煮符": "似煮符·西尼符",
+  "俯瞰符": "俯瞰者符",
+  "不完全疑問符": "无需作答的疑问符",
+  "ハイパーピリオド": "终止句点符",
+  "不透明疑問符": "雾隐疑问符",
+  "検閲符": "涂改审查符",
+  "真実 of 鍵": "真理之钥",
+  "ベタクラメーション": "贝塔克莱梅申·渐强惊叹符",
+  "PCの究極権利": "PC根权限符",
+  "デジタル バーンアウト": "数字倦怠符",
+  "ゼット サンド": "Z形思维回环·泽特沙",
+  "アット：β": "永远测试版·艾特贝塔",
+  "多層疑問符": "套层疑问符",
+  "破裂感嘆符": "爆裂惊叹符",
+  "迷宮疑問符": "迷宫疑问符",
+  "静寂感嘆符": "静默惊叹符",
+  "断片疑問符": "碎片疑问符",
+  "共鳴感嘆符": "共鸣惊叹符",
+  "透過疑問符": "透视疑问符",
+  "束縛感嘆符": "束缚惊叹符",
+  "浸透疑問符": "渗疑符·浸透疑问符",
+  "閃光感嘆符": "闪念惊叹符",
+  "忘却疑問符": "遗忘疑问符",
+  "反響感嘆符": "回响惊叹符·反响符",
+  "未完疑問符": "未竟疑问符",
+  "極小感嘆符": "微末惊叹符",
+  "無限疑問符": "无尽疑问符",
+  "不完全超立方体": "残缺超立方体",
+  "事案007-A": "异常事件 007-A",
+  "事案012-A": "异常事件 012-A",
+  "事案014-A": "异常事件 014-A",
+  "事案007-014-A": "异常事件 007-014-A",
+  "架空疑問展": "虚构疑问档案馆",
+  "世界記号統一団体": "国际符号标准组织",
+  "同一アート作家 R": "Artist R",
+  "CED財団": "CED基金会",
+  "NodeLABO": "NodeLABO",
+  "BIB": "BIB"
+});
+const ESPERANTO_ARCHIVE_NAMES = Object.freeze({
+  "句点和疑問符": "Punktodemanda signo (Kuten wa gimon fu)",
+  "句点和疑問符（亜種）": "Punktodemanda signo (varianto)",
+  "句点和感嘆符": "Punktoekkria signo (Kuten wa kantan fu)",
+  "句点和感嘆符（亜種）": "Punktoekkria signo (varianto)",
+  "疲感嘆符": "Laca kria signo",
+  "感嘆謝符": "Dankokrio",
+  "読点和疑問符": "Komdemanda signo",
+  "読点和感嘆符": "Komkria signo",
+  "超疑問符": "Abisma demando",
+  "超疑問符（亜種）": "Abisma demando (varianto)",
+  "二重否符": "Duobla negacia signo",
+  "似煮符": "Bol- kaj simil-signo",
+  "俯瞰符": "Superrigarda signo",
+  "不完全疑問符": "Neresponda demando",
+  "ハイパーピリオド": "Fina punktsigelo",
+  "不透明疑問符": "Nebula demando",
+  "検閲符": "Cenzura sigelo",
+  "真実 of 鍵": "Ŝlosilo al la vero",
+  "ベタクラメーション": "Malrapide kreskanta kria signo",
+  "PCの究極権利": "Radikpermesa signo",
+  "デジタル バーンアウト": "Reta elĉerpiĝo",
+  "ゼット サンド": "Pensociklo",
+  "アット：β": "Eterna beta",
+  "多層疑問符": "Rekursia demando",
+  "破裂感嘆符": "Eksploda kria signo",
+  "迷宮疑問符": "Labirinta demando",
+  "静寂感嘆符": "Silenta mirego",
+  "断片疑問符": "Fragmenta demando",
+  "共鳴感嘆符": "Komuna mirego",
+  "透過疑問符": "Penetra demando",
+  "束縛感嘆符": "Paraliza kria signo",
+  "浸透疑問符": "Enfiltriĝa dubo",
+  "閃光感嘆符": "Fulma kompreno",
+  "忘却疑問符": "Forgesiĝanta demando",
+  "反響感嘆符": "Eĥa kria signo",
+  "未完疑問符": "Neformita demando",
+  "極小感嘆符": "Eta kria signo",
+  "無限疑問符": "Senfina demando",
+  "不完全超立方体": "Frakturita hiperkubo",
+  "事案007-A": "Okazaĵo 007-A",
+  "事案012-A": "Okazaĵo 012-A",
+  "事案014-A": "Okazaĵo 014-A",
+  "事案007-014-A": "Okazaĵo 007-014-A",
+  "架空疑問展": "Arkivo de fikciaj demandoj",
+  "世界記号統一団体": "Monda Simbolnormiga Organizo",
+  "同一アート作家 R": "Artist R",
+  "CED財団": "Fondaĵo CED",
+  "NodeLABO": "NodeLABO",
+  "BIB": "BIB"
+});
+
 const POLISHED_ENGLISH_NAMES = Object.freeze({
   "句点和疑問符": "Assertive Query",
   "句点和疑問符（亜種）": "Assertive Query (Variant)",
@@ -115,7 +218,16 @@ const POLISHED_ENGLISH_NAMES = Object.freeze({
 
 function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
-  if (document.documentElement.lang !== 'en') return japanese;
+  const language = document.documentElement.lang;
+  if (language === 'ja') return japanese;
+  if (language === 'zh') {
+    const chinese = item?.nameZh || CHINESE_ARCHIVE_NAMES[japanese];
+    return chinese ? `${chinese}（${japanese}）` : japanese;
+  }
+  if (language === 'eo') {
+    const esperanto = item?.nameEo || ESPERANTO_ARCHIVE_NAMES[japanese];
+    return esperanto ? `${esperanto} (${japanese})` : japanese;
+  }
   const english = item?.nameEn || ENGLISH_ARCHIVE_NAMES[japanese];
   if (!english) return japanese;
   const polished = localStorage.getItem('symbolencyclopedia-polished-names') === 'true'
@@ -443,7 +555,7 @@ function renderCurrentArchive() {
   if (q) {
     data = data.filter(item => {
       const blob = [
-        item.id, item.name, item.title, item.nameEn, ENGLISH_ARCHIVE_NAMES[item.name], POLISHED_ENGLISH_NAMES[item.name], item.author, item.summary, item.detail,
+        item.id, item.name, item.title, item.nameEn, ENGLISH_ARCHIVE_NAMES[item.name], POLISHED_ENGLISH_NAMES[item.name], CHINESE_ARCHIVE_NAMES[item.name], ESPERANTO_ARCHIVE_NAMES[item.name], item.author, item.summary, item.detail,
         item.origin, item.usage, item.activity, item.level, item.mission, item.era, item.status, item.scope, item.date,
         (item.tags || []).join(','), item.org,
         (item.relatedsymbols || []).join(','),
