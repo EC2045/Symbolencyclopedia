@@ -1108,6 +1108,8 @@
   function translateTree(root = document) {
     const language = currentLanguage();
     if (root.nodeType === Node.ELEMENT_NODE) translateElement(root, language);
+    const elements = root.querySelectorAll ? root.querySelectorAll("[placeholder], [title], [aria-label]") : [];
+    elements.forEach(element => translateElement(element, language));
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) translateTextNode(node, language);
@@ -1168,7 +1170,7 @@
   window.addEventListener("languagechange", () => {
     if (localStorage.getItem(USER_SELECTED_KEY) === "true") return;
     const detected = detectBrowserLanguage();
-    if (detected !== currentLanguage()) setLanguage(detected);
+    if (detected !== document.documentElement.dataset.language) setLanguage(detected);
     if (langSelect) langSelect.value = "auto";
   });
   const nativeAlert = window.alert.bind(window);
