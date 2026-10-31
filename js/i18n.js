@@ -1039,6 +1039,7 @@
   const languageDictionary = language => language === "zh" ? translationsZh : language === "eo" ? translationsEo : language === "ja-easy" ? translationsEasy : language === "ja-old" ? translationsOld : translations;
   const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo"];
   const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
+  const AUTO_SELECTED_KEY = "symbolencyclopedia-language-auto";
   function detectBrowserLanguage() {
     const preferences = navigator.languages?.length ? navigator.languages : [navigator.language || "ja"];
     for (const preference of preferences) {
@@ -1053,7 +1054,8 @@
   const currentLanguage = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     const manuallySelected = localStorage.getItem(USER_SELECTED_KEY) === "true";
-    if ((manuallySelected || (saved && saved !== "ja")) && supportedLanguages.includes(saved)) return saved;
+        if (manuallySelected && supportedLanguages.includes(saved)) return saved;
+    if (!localStorage.getItem(AUTO_SELECTED_KEY) && saved && saved !== "ja" && supportedLanguages.includes(saved)) return saved;
     return detectBrowserLanguage();
   };
 
@@ -1148,6 +1150,7 @@
 
   if (langSelect) langSelect.addEventListener("change", () => {
     localStorage.setItem(USER_SELECTED_KEY, "true");
+    localStorage.removeItem(AUTO_SELECTED_KEY);
     setLanguage(langSelect.value);
   });
   window.addEventListener("languagechange", () => {
@@ -1165,5 +1168,10 @@
     const language = currentLanguage();
     return nativeConfirm(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] ?? translations[normalize(String(message))] ?? message));
   };
+  const legacyLanguage = localStorage.getItem(STORAGE_KEY);
+  if (legacyLanguage && legacyLanguage !== "ja" && !localStorage.getItem(USER_SELECTED_KEY) && !localStorage.getItem(AUTO_SELECTED_KEY)) {
+    localStorage.setItem(USER_SELECTED_KEY, "true");
+  }
+  if (localStorage.getItem(USER_SELECTED_KEY) !== "true") localStorage.setItem(AUTO_SELECTED_KEY, "true");
   setLanguage(currentLanguage());
 })();
