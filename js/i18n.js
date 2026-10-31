@@ -284,17 +284,17 @@
       : "架空の記号・事案・組織を集めた図鑑型アーカイブ。危険度やタグで検索し、詳細記録を閲覧できます。";
   }
 
-  const observer = new MutationObserver(records => {
-    const language = currentLanguage();
-    for (const record of records) {
-      if (record.type === "characterData") translateTextNode(record.target, language);
-      for (const node of record.addedNodes || []) {
-        if (node.nodeType === Node.TEXT_NODE) translateTextNode(node, language);
-        else if (node.nodeType === Node.ELEMENT_NODE) translateTree(node);
-      }
-    }
+  let translationFrame = 0;
+  const observer = new MutationObserver(() => {
+    if (currentLanguage() !== "en" || translationFrame) return;
+    translationFrame = requestAnimationFrame(() => {
+      translationFrame = 0;
+      observer.disconnect();
+      translateTree(document.body);
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
   });
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  observer.observe(document.body, { childList: true, subtree: true });
 
   if (langSelect) langSelect.addEventListener("change", () => setLanguage(langSelect.value));
   const nativeAlert = window.alert.bind(window);
