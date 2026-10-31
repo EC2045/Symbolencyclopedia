@@ -139,6 +139,7 @@
   "次へ（最終確認）": "Next (final confirmation)",
   "最終確認 — 閲覧の同意": "Final Confirmation — Consent to View",
   "この記録は復元不可の影響を残す可能性があります。続行する場合は下の入力欄に": "This record may have irreversible effects. To continue, type",
+  "この記録は復元不可の影響を残す可能性があります。続行する場合は下の入力欄に": "This record may have irreversible effects. To continue, type",
   "と入力して「最終確認」を押してください。": "in the field below and select “Final confirmation.”",
   "ここに「閲覧」と入力してください": "Type “VIEW” here",
   "閲覧": "VIEW",
