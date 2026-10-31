@@ -499,7 +499,193 @@
   for (const [japanese, english] of Object.entries(contentTranslations)) {
     translations[normalize(japanese)] = english;
   }
-  const currentLanguage = () => localStorage.getItem(STORAGE_KEY) === "en" ? "en" : "ja";
+  const translationsZh = {
+  "⚙ 設定": "⚙ 设置",
+  "高度な設定 & データベース": "高级设置与数据库",
+  "言語": "语言",
+  "フォント": "字体",
+  "標準": "标准",
+  "標準（読みやすい）": "标准（易读）",
+  "明朝": "明朝体",
+  "ゴシック": "黑体",
+  "サンセリフ": "无衬线体",
+  "等幅": "等宽字体",
+  "外観（テーマ）": "外观（主题）",
+  "ホワイト": "浅色",
+  "ダーク": "深色",
+  "古本": "复古纸色",
+  "背景アニメーション": "背景动画",
+  "記号サイズ": "符号大小",
+  "小": "小",
+  "中": "中",
+  "大": "大",
+  "表示設定": "显示设置",
+  "検索ボックス": "搜索框",
+  "並べ替え": "排序",
+  "作者フィルタ": "作者筛选",
+  "フィルタ": "筛选",
+  "全ての種類": "所有类别",
+  "ロード": "加载",
+  "ロードを常にスキップ": "始终跳过加载",
+  "警告（動作）": "警告设置",
+  "赤の警告を無効にする": "关闭红色警告",
+  "アーカイブ名": "档案名称",
+  "データベース": "数据库",
+  "＋ 新規追加": "＋ 新增",
+  "JSON出力": "导出 JSON",
+  "JSON読込": "导入 JSON",
+  "DB初期化": "重置数据库",
+  "フィルタをクリア": "清除筛选",
+  "架空疑問展": "虚构疑问档案馆",
+  "記号アーカイブ": "符号档案",
+  "記号亜種アーカイブ": "符号变体档案",
+  "事案アーカイブ": "事件档案",
+  "組織アーカイブ": "组织档案",
+  "編纂組織について": "关于编纂组织",
+  "アンケート": "问卷",
+  "← ホームへ戻る": "← 返回首页",
+  "名前、意味、キーワードを検索...": "搜索名称、含义或关键词...",
+  "全ての危険度": "所有风险等级",
+  "全てのタグ": "所有标签",
+  "すべての作者": "所有作者",
+  "登録順 (昇順)": "登记时间（升序）",
+  "登録順 (降順)": "登记时间（降序）",
+  "名前順": "名称",
+  "ご意見や感想はこちらから送れます。": "请在此提交意见或反馈。",
+  "該当する項目は見つかりませんでした。": "没有找到匹配条目。",
+  "閉じる": "关闭",
+  "戻る": "返回",
+  "レコード編集": "编辑记录",
+  "種類": "类别",
+  "名前 / タイトル": "名称 / 标题",
+  "作者 / 所属": "作者 / 所属",
+  "危険度": "风险等级",
+  "画像パス": "图片路径",
+  "タグ（カンマ区切り）": "标签（逗号分隔）",
+  "概要": "概要",
+  "詳細": "详情",
+  "保存": "保存",
+  "キャンセル": "取消",
+  "名称：": "名称：",
+  "作者：": "作者：",
+  "由来：": "来源：",
+  "用途：": "用途：",
+  "使用例：": "示例：",
+  "概要：": "概要：",
+  "詳細：": "详情：",
+  "タグ：": "标签：",
+  "関連記号：": "相关符号：",
+  "関連事案：": "相关事件：",
+  "関連組織：": "相关组织：",
+  "関連事案を開く": "打开相关事件",
+  "記録ID:": "记录编号：",
+  "危険度:": "风险等级：",
+  "♡ いいね": "♡ 点赞",
+  "♥ いいね済み": "♥ 已点赞",
+  "DBを読み込みました。": "数据库已导入。",
+  "JSONの読み込みに失敗しました。": "JSON 导入失败。",
+  "DBを初期化しました。": "数据库已重置。",
+  "高危険度": "高风险",
+  "中危険度": "中风险",
+  "低危険度": "低风险",
+  "英語名の表記": "英文名称风格",
+  "より自然な英語名を使う": "使用更自然的英文名称"
+};
+  const translationsEo = {
+  "⚙ 設定": "⚙ Agordoj",
+  "高度な設定 & データベース": "Altnivelaj agordoj kaj datumbazo",
+  "言語": "Lingvo",
+  "フォント": "Tiparo",
+  "標準": "Norma",
+  "標準（読みやすい）": "Norma (facile legebla)",
+  "明朝": "Minĉo",
+  "ゴシック": "Gotika",
+  "サンセリフ": "Senserifa",
+  "等幅": "Egallarĝa",
+  "外観（テーマ）": "Aspekto (etoso)",
+  "ホワイト": "Hela",
+  "ダーク": "Malhela",
+  "古本": "Sepia",
+  "背景アニメーション": "Fona animacio",
+  "記号サイズ": "Grando de simboloj",
+  "小": "Malgranda",
+  "中": "Meza",
+  "大": "Granda",
+  "表示設定": "Vidigaj agordoj",
+  "検索ボックス": "Serĉkesto",
+  "並べ替え": "Ordigo",
+  "作者フィルタ": "Filtrilo laŭ aŭtoro",
+  "フィルタ": "Filtriloj",
+  "全ての種類": "Ĉiuj tipoj",
+  "ロード": "Ŝargado",
+  "ロードを常にスキップ": "Ĉiam preterpasi ŝargadon",
+  "警告（動作）": "Avertoj",
+  "赤の警告を無効にする": "Malŝalti ruĝajn avertojn",
+  "アーカイブ名": "Arkiva nomo",
+  "データベース": "Datumbazo",
+  "＋ 新規追加": "+ Aldoni",
+  "JSON出力": "Eksporti JSON",
+  "JSON読込": "Importi JSON",
+  "DB初期化": "Restarigi datumbazon",
+  "フィルタをクリア": "Forigi filtrilojn",
+  "架空疑問展": "Arkivo de Fikciaj Demandoj",
+  "記号アーカイブ": "Simbola Arkivo",
+  "記号亜種アーカイブ": "Arkivo de Simbolaj Variantoj",
+  "事案アーカイブ": "Arkivo de Okazaĵoj",
+  "組織アーカイブ": "Arkivo de Organizoj",
+  "編纂組織について": "Pri la Arkiva Organizo",
+  "アンケート": "Enketo",
+  "← ホームへ戻る": "← Reiri hejmen",
+  "名前、意味、キーワードを検索...": "Serĉi nomojn, signifojn aŭ ŝlosilvortojn...",
+  "全ての危険度": "Ĉiuj riskniveloj",
+  "全てのタグ": "Ĉiuj etikedoj",
+  "すべての作者": "Ĉiuj aŭtoroj",
+  "登録順 (昇順)": "Dato aldonita (kreske)",
+  "登録順 (降順)": "Dato aldonita (malkreske)",
+  "名前順": "Nomo",
+  "ご意見や感想はこちらから送れます。": "Sendu komentojn aŭ impresojn ĉi tie.",
+  "該当する項目は見つかりませんでした。": "Neniuj kongruaj eroj troviĝis.",
+  "閉じる": "Fermi",
+  "戻る": "Reen",
+  "レコード編集": "Redakti registron",
+  "種類": "Tipo",
+  "名前 / タイトル": "Nomo / Titolo",
+  "作者 / 所属": "Aŭtoro / Aliĝo",
+  "危険度": "Risknivelo",
+  "画像パス": "Bilda vojo",
+  "タグ（カンマ区切り）": "Etikedoj (apartigitaj per komoj)",
+  "概要": "Resumo",
+  "詳細": "Detaloj",
+  "保存": "Konservi",
+  "キャンセル": "Nuligi",
+  "名称：": "Nomo:",
+  "作者：": "Aŭtoro:",
+  "由来：": "Origino:",
+  "用途：": "Uzado:",
+  "使用例：": "Ekzemplo:",
+  "概要：": "Resumo:",
+  "詳細：": "Detaloj:",
+  "タグ：": "Etikedoj:",
+  "関連記号：": "Rilataj simboloj:",
+  "関連事案：": "Rilataj okazaĵoj:",
+  "関連組織：": "Rilataj organizoj:",
+  "関連事案を開く": "Malfermi rilatan okazaĵon",
+  "記録ID:": "Registro-ID:",
+  "危険度:": "Risknivelo:",
+  "♡ いいね": "♡ Ŝati",
+  "♥ いいね済み": "♥ Ŝatite",
+  "DBを読み込みました。": "Datumbazo importita.",
+  "JSONの読み込みに失敗しました。": "Malsukcesis importi JSON.",
+  "DBを初期化しました。": "Datumbazo restarigita.",
+  "高危険度": "Alta risko",
+  "中危険度": "Meza risko",
+  "低危険度": "Malalta risko",
+  "英語名の表記": "Angla nomstilo",
+  "より自然な英語名を使う": "Uzi pli naturajn anglajn nomojn"
+};
+  const languageDictionary = language => language === "zh" ? translationsZh : language === "eo" ? translationsEo : translations;
+  const supportedLanguages = ["ja", "en", "zh", "eo"];
+  const currentLanguage = () => { const saved = localStorage.getItem(STORAGE_KEY); return supportedLanguages.includes(saved) ? saved : "ja"; };
 
   function translateTextNode(node, language) {
     if (node.parentElement?.closest("[data-i18n-skip]")) return;
@@ -512,7 +698,8 @@
     const leading = original.match(/^\s*/)?.[0] || "";
     const trailing = original.match(/\s*$/)?.[0] || "";
     const key = normalize(original);
-    let value = translations[key];
+    const dictionary = languageDictionary(language);
+    let value = dictionary[key] ?? translations[key];
     if (value === undefined) {
       value = key
         .replace(/^作者：/, "Author: ")
@@ -537,7 +724,7 @@
       if (!originals) { originals = {}; originalAttributes.set(element, originals); }
       if (!(attr in originals)) originals[attr] = element.getAttribute(attr);
       const original = originals[attr];
-      element.setAttribute(attr, language === "en" ? (translations[normalize(original)] ?? original) : original);
+      element.setAttribute(attr, language === "ja" ? original : (languageDictionary(language)[normalize(original)] ?? translations[normalize(original)] ?? original));
     }
   }
 
@@ -550,7 +737,7 @@
   }
 
   function setLanguage(language) {
-    const chosen = language === "en" ? "en" : "ja";
+    const chosen = supportedLanguages.includes(language) ? language : "ja";
     localStorage.setItem(STORAGE_KEY, chosen);
     document.documentElement.lang = chosen;
     if (langSelect) langSelect.value = chosen;
@@ -560,19 +747,23 @@
     if (namingToggle) namingToggle.checked = localStorage.getItem("symbolencyclopedia-polished-names") === "true";
     translateTree(document);
     window.dispatchEvent(new Event("site-language-change"));
-    const titleJa = "架空疑問展 | 記号アーカイブ（DB版）";
-    document.title = chosen === "en" ? "Archive of Fictional Questions | Symbol Archive" : titleJa;
+    const titles = { ja: "架空疑問展 | 記号アーカイブ（DB版）", en: "Archive of Fictional Questions | Symbol Archive", zh: "虚构疑问档案馆 | 符号档案", eo: "Arkivo de Fikciaj Demandoj | Simbola Arkivo" };
+    document.title = titles[chosen];
     const locale = document.querySelector('meta[property="og:locale"]');
-    if (locale) locale.content = chosen === "en" ? "en_US" : "ja_JP";
+    if (locale) locale.content = ({ ja: "ja_JP", en: "en_US", zh: "zh_CN", eo: "eo" })[chosen];
     const description = document.querySelector('meta[name="description"]');
-    if (description) description.content = chosen === "en"
-      ? "A fictional archive of symbols, cases, and organizations. Search by risk level or tag and explore detailed records."
-      : "架空の記号・事案・組織を集めた図鑑型アーカイブ。危険度やタグで検索し、詳細記録を閲覧できます。";
+    const descriptions = {
+      ja: "架空の記号・事案・組織を集めた図鑑型アーカイブ。危険度やタグで検索し、詳細記録を閲覧できます。",
+      en: "A fictional archive of symbols, cases, and organizations. Search by risk level or tag and explore detailed records.",
+      zh: "收录虚构符号、事件与组织的档案，可按风险或标签搜索并查看详细记录。",
+      eo: "Fikcia arkivo de simboloj, okazaĵoj kaj organizoj. Serĉu laŭ risko aŭ etikedo kaj legu detalojn."
+    };
+    if (description) description.content = descriptions[chosen];
   }
 
   let translationFrame = 0;
   const observer = new MutationObserver(() => {
-    if (currentLanguage() !== "en" || translationFrame) return;
+    if (currentLanguage() === "ja" || translationFrame) return;
     translationFrame = requestAnimationFrame(() => {
       translationFrame = 0;
       observer.disconnect();
@@ -585,7 +776,13 @@
   if (langSelect) langSelect.addEventListener("change", () => setLanguage(langSelect.value));
   const nativeAlert = window.alert.bind(window);
   const nativeConfirm = window.confirm.bind(window);
-  window.alert = message => nativeAlert(currentLanguage() === "en" ? (translations[normalize(String(message))] ?? message) : message);
-  window.confirm = message => nativeConfirm(currentLanguage() === "en" ? (translations[normalize(String(message))] ?? message) : message);
+  window.alert = message => {
+    const language = currentLanguage();
+    return nativeAlert(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] ?? translations[normalize(String(message))] ?? message));
+  };
+  window.confirm = message => {
+    const language = currentLanguage();
+    return nativeConfirm(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] ?? translations[normalize(String(message))] ?? message));
+  };
   setLanguage(currentLanguage());
 })();
