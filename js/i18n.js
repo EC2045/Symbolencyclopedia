@@ -243,7 +243,10 @@
         .replace(/^事案資料$/, "Case record")
         .replace(/^組織資料$/, "Organization record");
     }
-    if (value !== undefined) node.nodeValue = leading + value + trailing;
+    if (value !== undefined) {
+      const translated = leading + value + trailing;
+      if (node.nodeValue !== translated) node.nodeValue = translated;
+    }
   }
 
   function translateElement(element, language) {
