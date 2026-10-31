@@ -1,3 +1,14 @@
+function setPolishedEnglishNames(enabled) {
+  localStorage.setItem('symbolencyclopedia-polished-names', enabled ? 'true' : 'false');
+  const toggle = document.getElementById('polished-name-toggle');
+  if (toggle) toggle.checked = !!enabled;
+  if (document.documentElement.lang === 'en' && state?.db) {
+    renderCurrentArchive();
+    if (state.currentItem) openUnifiedDetail(state.currentItem.type, state.currentItem.id);
+  }
+}
+window.setPolishedEnglishNames = setPolishedEnglishNames;
+
 const ENGLISH_ARCHIVE_NAMES = Object.freeze({
   "句点和疑問符": "Japanese Period Question",
   "句点和疑問符（亜種）": "Japanese Period Question (Variant)",
@@ -30,7 +41,7 @@ const ENGLISH_ARCHIVE_NAMES = Object.freeze({
   "共鳴感嘆符": "Resonance Exclamation",
   "透過疑問符": "Transparent Question",
   "束縛感嘆符": "Binding Exclamation",
-  "浸透感嘆符": "Permeating Exclamation",
+  "浸透疑問符": "Permeating Question",
   "閃光感嘆符": "Flash Exclamation",
   "忘却疑問符": "Forgetful Question",
   "反響感嘆符": "Boomerang Exclamation",
@@ -50,11 +61,67 @@ const ENGLISH_ARCHIVE_NAMES = Object.freeze({
   "BIB": "BIB"
 });
 
+const POLISHED_ENGLISH_NAMES = Object.freeze({
+  "句点和疑問符": "Assertive Query",
+  "句点和疑問符（亜種）": "Assertive Query (Variant)",
+  "句点和感嘆符": "Finality Mark",
+  "句点和感嘆符（亜種）": "Finality Mark (Variant)",
+  "疲感嘆符": "Weary Mark",
+  "感嘆謝符": "Gratitude Mark",
+  "読点和疑問符": "Continuative Query",
+  "読点和感嘆符": "Run-On Exclamation",
+  "超疑問符": "Abyssal Query",
+  "超疑問符（亜種）": "Abyssal Query (Variant)",
+  "二重否符": "Affirmation Mark",
+  "似煮符": "Simmer Mark",
+  "俯瞰符": "Detached Observer",
+  "不完全疑問符": "No-Reply Query",
+  "ハイパーピリオド": "Terminal Mark",
+  "不透明疑問符": "Hazy Query",
+  "検閲符": "Redaction Seal",
+  "真実 of 鍵": "Key to Truth",
+  "ベタクラメーション": "Slow-Burn Exclamation",
+  "PCの究極権利": "Root Access Mark",
+  "デジタル バーンアウト": "Social Exhaustion",
+  "ゼット サンド": "Thought Loop",
+  "アット：β": "Forever Beta",
+  "多層疑問符": "Recursive Query",
+  "破裂感嘆符": "Outburst Mark",
+  "迷宮疑問符": "Labyrinthine Query",
+  "静寂感嘆符": "Silent Awe",
+  "断片疑問符": "Broken Query",
+  "共鳴感嘆符": "Shared Awe",
+  "透過疑問符": "Piercing Query",
+  "束縛感嘆符": "Frozen Exclamation",
+  "浸透疑問符": "Seeping Doubt",
+  "閃光感嘆符": "Flash of Insight",
+  "忘却疑問符": "Fading Query",
+  "反響感嘆符": "Echo Mark",
+  "未完疑問符": "Unasked Query",
+  "極小感嘆符": "Faint Exclamation",
+  "無限疑問符": "Endless Question",
+  "不完全超立方体": "Fractured Hypercube",
+  "事案007-A": "Case 007-A",
+  "事案012-A": "Case 012-A",
+  "事案014-A": "Case 014-A",
+  "事案007-014-A": "Case 007-014-A",
+  "架空疑問展": "The Question Archive",
+  "世界記号統一団体": "International Symbol Standards Office",
+  "同一アート作家 R": "Artist R",
+  "CED財団": "CED Foundation",
+  "NodeLABO": "NodeLABO",
+  "BIB": "BIB"
+});
+
 function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
   if (document.documentElement.lang !== 'en') return japanese;
   const english = item?.nameEn || ENGLISH_ARCHIVE_NAMES[japanese];
-  return english ? `${english} (${japanese})` : japanese;
+  if (!english) return japanese;
+  const polished = localStorage.getItem('symbolencyclopedia-polished-names') === 'true'
+    ? POLISHED_ENGLISH_NAMES[japanese]
+    : '';
+  return `${polished || english} (${japanese})`;
 }
 
 
@@ -376,7 +443,7 @@ function renderCurrentArchive() {
   if (q) {
     data = data.filter(item => {
       const blob = [
-        item.id, item.name, item.title, item.nameEn, ENGLISH_ARCHIVE_NAMES[item.name], item.author, item.summary, item.detail,
+        item.id, item.name, item.title, item.nameEn, ENGLISH_ARCHIVE_NAMES[item.name], POLISHED_ENGLISH_NAMES[item.name], item.author, item.summary, item.detail,
         item.origin, item.usage, item.activity, item.level, item.mission, item.era, item.status, item.scope, item.date,
         (item.tags || []).join(','), item.org,
         (item.relatedsymbols || []).join(','),
