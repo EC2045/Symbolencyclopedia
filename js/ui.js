@@ -218,8 +218,9 @@ const POLISHED_ENGLISH_NAMES = Object.freeze({
 
 function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
-  const language = document.documentElement.lang;
-  if (language === 'ja') return japanese;
+  const language = document.documentElement.dataset.language || document.documentElement.lang;
+  if (language === 'ja' || language === 'ja-old') return japanese;
+  if (language === 'ja-easy') return japanese === '句点和疑問符' ? 'にほんのはてな' : japanese;
   if (language === 'zh') {
     const chinese = item?.nameZh || CHINESE_ARCHIVE_NAMES[japanese];
     return chinese ? `${chinese}（${japanese}）` : japanese;
