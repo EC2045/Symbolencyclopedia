@@ -1042,6 +1042,7 @@
   "関連組織：": "ゆかりの組織:",
   "関連事案を開く": "ゆかりの事案を開く"
 };
+  Object.assign(translationsEasy, window.EASY_RECORD_TEXT || {});
   const languageDictionary = language => language === "zh" ? translationsZh : language === "eo" ? translationsEo : language === "ja-easy" ? translationsEasy : language === "ja-old" ? translationsOld : translations;
   const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo"];
   const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
