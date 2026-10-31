@@ -402,6 +402,11 @@
   "BIBはデジタルへ強い嫌悪感を持ち、 肉体と意識は紐づけられるべきだと考えている。またアート作家R（ORG-003）と深い関わりがあると予測されている。": "BIB strongly dislikes digital technology and believes the body and consciousness should remain linked. It is also suspected of having close ties to artist R (ORG-003)."
 };
   Object.assign(contentTranslations, {
+  "英語名の表記": "English name style",
+  "より自然な英語名を使う": "Use more natural English names",
+  "直訳寄りの名前を、より自然で作品らしい英語名に切り替えます。": "Switch from literal translations to more natural, in-world English names."
+});
+  Object.assign(contentTranslations, {
   "本当にそれが最善の選択だったのか:句点和疑問符:": "Was that really the best choice:Japanese Period Question:",
   "なるほど、そういうことでしたか:句点和感嘆符:": "Ah, so that’s what it was:Japanese Period Exclamation:",
   "長年の謎がようやく解けました。": "After all these years, the mystery is finally solved.",
@@ -549,6 +554,10 @@
     localStorage.setItem(STORAGE_KEY, chosen);
     document.documentElement.lang = chosen;
     if (langSelect) langSelect.value = chosen;
+    const namingSetting = document.getElementById("polished-name-setting");
+    const namingToggle = document.getElementById("polished-name-toggle");
+    if (namingSetting) namingSetting.style.display = chosen === "en" ? "" : "none";
+    if (namingToggle) namingToggle.checked = localStorage.getItem("symbolencyclopedia-polished-names") === "true";
     translateTree(document);
     window.dispatchEvent(new Event("site-language-change"));
     const titleJa = "架空疑問展 | 記号アーカイブ（DB版）";
