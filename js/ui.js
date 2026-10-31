@@ -44,7 +44,7 @@ const ENGLISH_ARCHIVE_NAMES = Object.freeze({
   "事案007-014-A": "Incident 007-014-A",
   "架空疑問展": "Archive of Fictional Questions",
   "世界記号統一団体": "World Symbol Unification Organization",
-  "同一アート作家 R": "Same Art Artist R",
+  "同一アート作家 R": "Artist R",
   "CED財団": "CED Foundation",
   "NodeLABO": "NodeLABO",
   "BIB": "BIB"
