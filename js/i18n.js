@@ -222,6 +222,7 @@
   const currentLanguage = () => localStorage.getItem(STORAGE_KEY) === "en" ? "en" : "ja";
 
   function translateTextNode(node, language) {
+    if (node.parentElement?.closest("[data-i18n-skip]")) return;
     if (!originalText.has(node)) originalText.set(node, node.nodeValue);
     const original = originalText.get(node);
     if (language === "ja") {
@@ -274,6 +275,7 @@
     document.documentElement.lang = chosen;
     if (langSelect) langSelect.value = chosen;
     translateTree(document);
+    window.dispatchEvent(new Event("site-language-change"));
     const titleJa = "架空疑問展 | 記号アーカイブ（DB版）";
     document.title = chosen === "en" ? "Archive of Fictional Questions | Symbol Archive" : titleJa;
     const locale = document.querySelector('meta[property="og:locale"]');
