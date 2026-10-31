@@ -676,7 +676,7 @@ function initWarningHandlers() {
 
   if (finalInput) {
     finalInput.addEventListener('input', () => {
-      if (finalBtn) finalBtn.disabled = (finalInput.value.trim() !== '閲覧');
+      if (finalBtn) finalBtn.disabled = (finalInput.value.trim() !== (document.documentElement.lang === 'en' ? 'VIEW' : '閲覧'));
     });
   }
 
