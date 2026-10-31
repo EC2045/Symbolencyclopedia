@@ -204,6 +204,7 @@
   "名称": "Name",
   "作者": "Author",
   "言語": "Language",
+  "ブラウザ設定に合わせる（自動）": "Use browser language (automatic)",
   "データベースを読み込んでいます...": "Connecting to database...",
   "古い疑問を読み込んでいます...": "Loading old questions...",
   "異世界の論理を構築中...": "Building the logic of another world...",
@@ -503,6 +504,7 @@
   "⚙ 設定": "⚙ 设置",
   "高度な設定 & データベース": "高级设置与数据库",
   "言語": "语言",
+  "ブラウザ設定に合わせる（自動）": "跟随浏览器设置（自动）",
   "フォント": "字体",
   "標準": "标准",
   "標準（読みやすい）": "标准（易读）",
@@ -663,6 +665,7 @@
   "⚙ 設定": "⚙ Agordoj",
   "高度な設定 & データベース": "Altnivelaj agordoj kaj datumbazo",
   "言語": "Lingvo",
+  "ブラウザ設定に合わせる（自動）": "Sekvi la retumilan lingvo-agordon (aŭtomate)",
   "フォント": "Tiparo",
   "標準": "Norma",
   "標準（読みやすい）": "Norma (facile legebla)",
@@ -819,6 +822,7 @@
   "⚙ 設定": "⚙ せってい",
   "高度な設定 & データベース": "くわしい せってい・データ",
   "言語": "ことば",
+  "ブラウザ設定に合わせる（自動）": "ブラウザの せっていに あわせる（自動）",
   "フォント": "文字の かたち",
   "標準": "ふつう",
   "標準（読みやすい）": "読みやすい",
@@ -933,6 +937,7 @@
   "⚙ 設定": "⚙ 設定",
   "高度な設定 & データベース": "奥向きの設定・記録庫",
   "言語": "言の葉",
+  "ブラウザ設定に合わせる（自動）": "閲覧環境の言の葉に従う（自動）",
   "フォント": "字体",
   "標準": "常のもの",
   "標準（読みやすい）": "読みやすき字体",
@@ -1149,6 +1154,13 @@
   observer.observe(document.body, { childList: true, subtree: true });
 
   if (langSelect) langSelect.addEventListener("change", () => {
+    if (langSelect.value === "auto") {
+      localStorage.removeItem(USER_SELECTED_KEY);
+      localStorage.setItem(AUTO_SELECTED_KEY, "true");
+      setLanguage(detectBrowserLanguage());
+      langSelect.value = "auto";
+      return;
+    }
     localStorage.setItem(USER_SELECTED_KEY, "true");
     localStorage.removeItem(AUTO_SELECTED_KEY);
     setLanguage(langSelect.value);
@@ -1157,6 +1169,7 @@
     if (localStorage.getItem(USER_SELECTED_KEY) === "true") return;
     const detected = detectBrowserLanguage();
     if (detected !== currentLanguage()) setLanguage(detected);
+    if (langSelect) langSelect.value = "auto";
   });
   const nativeAlert = window.alert.bind(window);
   const nativeConfirm = window.confirm.bind(window);
@@ -1174,4 +1187,5 @@
   }
   if (localStorage.getItem(USER_SELECTED_KEY) !== "true") localStorage.setItem(AUTO_SELECTED_KEY, "true");
   setLanguage(currentLanguage());
+  if (langSelect && localStorage.getItem(USER_SELECTED_KEY) !== "true") langSelect.value = "auto";
 })();
