@@ -23,6 +23,7 @@ function normalizeItem(item) {
     detail: String(item.detail || ''),
     origin: String(item.origin || ''),
     usage: String(item.usage || ''),
+    example: String(item.example || ''),
     org: String(item.org || ''),
     activity: String(item.activity || ''),
     level: String(item.level || ''),
