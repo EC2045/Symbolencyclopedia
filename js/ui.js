@@ -1,3 +1,62 @@
+const ENGLISH_ARCHIVE_NAMES = Object.freeze({
+  "句点和疑問符": "Japanese Period Question",
+  "句点和疑問符（亜種）": "Japanese Period Question (Variant)",
+  "句点和感嘆符": "Japanese Period Exclamation",
+  "句点和感嘆符（亜種）": "Japanese Period Exclamation (Variant)",
+  "疲感嘆符": "Tired Exclamation",
+  "感嘆謝符": "Thank-You Exclamation",
+  "読点和疑問符": "Japanese Comma Question",
+  "読点和感嘆符": "Japanese Comma Exclamation",
+  "超疑問符": "Super Question",
+  "超疑問符（亜種）": "Super Question (Variant)",
+  "二重否符": "Double Negation Mark",
+  "似煮符": "Similar Boiling Mark",
+  "俯瞰符": "Top-View Mark",
+  "不完全疑問符": "Incomplete Question Mark",
+  "ハイパーピリオド": "Hyper Period",
+  "不透明疑問符": "Opaque Question Mark",
+  "検閲符": "Censorship Mark",
+  "真実 of 鍵": "Truth of Key",
+  "ベタクラメーション": "Betaclamation",
+  "PCの究極権利": "Super Power of PC",
+  "デジタル バーンアウト": "Digital Burnout",
+  "ゼット サンド": "Z Sand",
+  "アット：β": "At: Beta",
+  "多層疑問符": "Multi-Layer Question Mark",
+  "破裂感嘆符": "Burst Exclamation",
+  "迷宮疑問符": "Labyrinth Question",
+  "静寂感嘆符": "Silence Exclamation",
+  "断片疑問符": "Fragment Question",
+  "共鳴感嘆符": "Resonance Exclamation",
+  "透過疑問符": "Transparent Question",
+  "束縛感嘆符": "Binding Exclamation",
+  "浸透感嘆符": "Permeating Exclamation",
+  "閃光感嘆符": "Flash Exclamation",
+  "忘却疑問符": "Forgetful Question",
+  "反響感嘆符": "Boomerang Exclamation",
+  "未完疑問符": "Half-Finished Question",
+  "極小感嘆符": "Tiny Exclamation",
+  "無限疑問符": "Infinite Question",
+  "不完全超立方体": "Incomplete Hypercube",
+  "事案007-A": "Incident 007-A",
+  "事案012-A": "Incident 012-A",
+  "事案014-A": "Incident 014-A",
+  "事案007-014-A": "Incident 007-014-A",
+  "架空疑問展": "Archive of Fictional Questions",
+  "世界記号統一団体": "World Symbol Unification Organization",
+  "同一アート作家 R": "Same Art Artist R",
+  "CED財団": "CED Foundation",
+  "NodeLABO": "NodeLABO",
+  "BIB": "BIB"
+});
+
+function getEntryDisplayName(item) {
+  const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
+  if (document.documentElement.lang !== 'en') return japanese;
+  const english = item?.nameEn || ENGLISH_ARCHIVE_NAMES[japanese];
+  return english ? `${english} (${japanese})` : japanese;
+}
+
 
 function getVisibleEntries() {
   if (state.currentArchive === 'symbolVariants') {
@@ -22,7 +81,7 @@ function getIncidentObjectsByIds(ids) {
 function resolveLinkedItems(type, ids) {
   return (ids || []).map(id => {
     const item = getItemById(type, id);
-    return item ? `${item.name || item.title || id} (${id})` : String(id);
+    return item ? `${getEntryDisplayName(item)} (${id})` : String(id);
   });
 }
 
@@ -39,13 +98,13 @@ function openLinkedItem(type, id) {
 }
 
 function makeLinkChip(type, id, label) {
-  return `<button type="button" class="tag-badge" style="cursor:pointer; border:1px solid var(--border-color); background:var(--chip-bg); color:var(--chip-text);" onclick="openLinkedItem('${type}', '${escapeAttr(id)}'); event.stopPropagation();">${escapeHtml(label)}</button>`;
+  return `<button data-i18n-skip="true" type="button" class="tag-badge" style="cursor:pointer; border:1px solid var(--border-color); background:var(--chip-bg); color:var(--chip-text);" onclick="openLinkedItem('${type}', '${escapeAttr(id)}'); event.stopPropagation();">${escapeHtml(label)}</button>`;
 }
 
 function makeCaseLinks(ids) {
   return (ids || []).map(id => {
     const item = getItemById('cases', id);
-    const label = item ? `${item.name || item.title || item.id} (${item.id})` : String(id);
+    const label = item ? `${getEntryDisplayName(item)} (${item.id})` : String(id);
     return makeLinkChip('cases', id, label);
   }).join(' ');
 }
@@ -317,7 +376,7 @@ function renderCurrentArchive() {
   if (q) {
     data = data.filter(item => {
       const blob = [
-        item.id, item.name, item.title, item.author, item.summary, item.detail,
+        item.id, item.name, item.title, item.nameEn, ENGLISH_ARCHIVE_NAMES[item.name], item.author, item.summary, item.detail,
         item.origin, item.usage, item.activity, item.level, item.mission, item.era, item.status, item.scope, item.date,
         (item.tags || []).join(','), item.org,
         (item.relatedsymbols || []).join(','),
@@ -359,7 +418,7 @@ function createArchiveCard(item) {
         : item.variantOf ? '記号亜種'
           : '記号';
 
-  const title = item.name || item.title || `ID ${item.id || ''}`;
+  const title = getEntryDisplayName(item);
   const summary = item.type === 'symbols'
     ? (item.summary || item.detail || item.origin || '')
     : item.type === 'cases'
@@ -390,6 +449,7 @@ function createArchiveCard(item) {
 
   const heading = document.createElement('h3');
   heading.className = 'symbol-name';
+  heading.dataset.i18nSkip = 'true';
   heading.textContent = title;
   body.appendChild(heading);
 
@@ -562,12 +622,12 @@ function openUnifiedDetail(type, id) {
   const parentItem = item.variantOf ? getItemById('symbols', item.variantOf) : null;
 
   let html = renderDangerBanner(item.danger);
-  html += `<div style="margin-top:14px;"><strong>名称：</strong>${escapeHtml(item.name || item.title || '')}</div>`;
+  html += `<div style="margin-top:14px;"><strong>名称：</strong><span data-i18n-skip="true">${escapeHtml(getEntryDisplayName(item))}</span></div>`;
   html += `<div><strong>ID：</strong>${escapeHtml(item.id || '')}</div>`;
   html += `<div><strong>作者：</strong>${escapeHtml(item.author || '')}</div>`;
   if (item.reading) html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
   if (item.variantOf) {
-    const label = parentItem ? `${parentItem.name || parentItem.title || parentItem.id} (${parentItem.id})` : item.variantOf;
+    const label = parentItem ? `${getEntryDisplayName(parentItem)} (${parentItem.id})` : item.variantOf;
     html += `<div><strong>元の記号：</strong>${makeLinkChip('symbols', item.variantOf, label)}</div>`;
     html += `<div style="margin-top:8px;"><strong>亜種メモ：</strong>仕様はほぼ同じです。見た目の差分を中心に扱います。</div>`;
   }
@@ -589,7 +649,7 @@ function openUnifiedDetail(type, id) {
   if (item.relatedsymbols?.length) {
     html += `<hr><div><strong>関連記号：</strong>${item.relatedsymbols.map(id => {
       const rel = getItemById('symbols', id);
-      const label = rel ? `${rel.name || rel.title || rel.id} (${rel.id})` : String(id);
+      const label = rel ? `${getEntryDisplayName(rel)} (${rel.id})` : String(id);
       return makeLinkChip('symbols', id, label);
     }).join(' ')}</div>`;
   }
@@ -599,14 +659,14 @@ function openUnifiedDetail(type, id) {
   if (item.relatedOrgs?.length) {
     html += `<div style="margin-top:10px;"><strong>関連組織：</strong>${item.relatedOrgs.map(id => {
       const rel = getItemById('orgs', id);
-      const label = rel ? `${rel.name || rel.title || rel.id} (${rel.id})` : String(id);
+      const label = rel ? `${getEntryDisplayName(rel)} (${rel.id})` : String(id);
       return makeLinkChip('orgs', id, label);
     }).join(' ')}</div>`;
   }
 
   if (variants.length) {
     html += `<hr><div><strong>登録済みの亜種：</strong></div>`;
-    html += `<div class="chips-row">${variants.map(v => makeLinkChip('symbols', v.id, `${v.name || v.title || v.id} (${v.id})`)).join('')}</div>`;
+    html += `<div class="chips-row">${variants.map(v => makeLinkChip('symbols', v.id, `${getEntryDisplayName(v)} (${v.id})`)).join('')}</div>`;
   }
 
   if (incidents.length) {
@@ -628,7 +688,8 @@ function openUnifiedDetail(type, id) {
     });
   }
 
-  titleEl.innerText = item.name || item.title || item.id || '';
+  titleEl.dataset.i18nSkip = 'true';
+  titleEl.innerText = getEntryDisplayName(item);
   bodyEl.innerHTML = html;
   setModal('detail-modal', true);
 }
@@ -893,3 +954,10 @@ window.openEditorFromCurrent = () => {
 };
 window.openVariantEditor = openVariantEditor;
 
+
+
+window.addEventListener('site-language-change', () => {
+  if (!state?.db) return;
+  renderCurrentArchive();
+  if (state.currentItem) openUnifiedDetail(state.currentItem.type, state.currentItem.id);
+});
