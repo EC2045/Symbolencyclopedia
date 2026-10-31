@@ -268,10 +268,53 @@ const EASY_ARCHIVE_NAMES = Object.freeze({
   "BIB": "BIB"
 });
 
+const OLD_ARCHIVE_NAMES = Object.freeze({
+  "句点和疑問符": "和句の疑問符",
+  "句点和疑問符（亜種）": "和句の疑問符（異体）",
+  "句点和感嘆符": "和句の感嘆符",
+  "句点和感嘆符（亜種）": "和句の感嘆符（異体）",
+  "疲感嘆符": "倦みの感嘆符",
+  "感嘆謝符": "感謝の感嘆符",
+  "読点和疑問符": "読点の疑問符",
+  "読点和感嘆符": "読点の感嘆符",
+  "超疑問符": "超ゆる疑問符",
+  "超疑問符（亜種）": "超ゆる疑問符（異体）",
+  "二重否符": "二重の否定符",
+  "似煮符": "似煮の符",
+  "俯瞰符": "俯瞰の符",
+  "不完全疑問符": "欠けたる疑問符",
+  "ハイパーピリオド": "極終の句点",
+  "不透明疑問符": "朧なる疑問符",
+  "検閲符": "検閲の符",
+  "真実 of 鍵": "真実の鍵",
+  "ベタクラメーション": "漸増の感嘆符",
+  "PCの究極権利": "電算機の至高権限",
+  "デジタル バーンアウト": "電脳疲弊",
+  "ゼット サンド": "循環の砂",
+  "アット：β": "あっと・べえた",
+  "多層疑問符": "幾重の疑問符",
+  "破裂感嘆符": "破裂の感嘆符",
+  "迷宮疑問符": "迷宮の疑問符",
+  "静寂感嘆符": "静寂の感嘆符",
+  "断片疑問符": "断片の疑問符",
+  "共鳴感嘆符": "共鳴の感嘆符",
+  "透過疑問符": "透かしの疑問符",
+  "束縛感嘆符": "束縛の感嘆符",
+  "浸透疑問符": "染み入る疑問符",
+  "閃光感嘆符": "閃きの感嘆符",
+  "忘却疑問符": "忘却の疑問符",
+  "反響感嘆符": "反響の感嘆符",
+  "未完疑問符": "未完の疑問符",
+  "極小感嘆符": "極小の感嘆符",
+  "無限疑問符": "無限の疑問符",
+  "不完全超立方体": "不完全なる超立方体"
+});
+
 function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
   const language = document.documentElement.dataset.language || document.documentElement.lang;
-  if (language === 'ja' || language === 'ja-old') return japanese;
+  if (language === 'ja') return japanese;
+  if (language === 'ja-old') return OLD_ARCHIVE_NAMES[japanese] || japanese;
   if (language === 'ja-easy') return EASY_ARCHIVE_NAMES[japanese] || japanese;
   if (language === 'zh') {
     const chinese = item?.nameZh || CHINESE_ARCHIVE_NAMES[japanese];
