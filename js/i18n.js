@@ -1038,7 +1038,24 @@
 };
   const languageDictionary = language => language === "zh" ? translationsZh : language === "eo" ? translationsEo : language === "ja-easy" ? translationsEasy : language === "ja-old" ? translationsOld : translations;
   const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo"];
-  const currentLanguage = () => { const saved = localStorage.getItem(STORAGE_KEY); return supportedLanguages.includes(saved) ? saved : "ja"; };
+  const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
+  function detectBrowserLanguage() {
+    const preferences = navigator.languages?.length ? navigator.languages : [navigator.language || "ja"];
+    for (const preference of preferences) {
+      const base = String(preference).toLowerCase().split("-")[0];
+      if (base === "ja") return "ja";
+      if (base === "en") return "en";
+      if (base === "zh") return "zh";
+      if (base === "eo") return "eo";
+    }
+    return "ja";
+  }
+  const currentLanguage = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const manuallySelected = localStorage.getItem(USER_SELECTED_KEY) === "true";
+    if ((manuallySelected || (saved && saved !== "ja")) && supportedLanguages.includes(saved)) return saved;
+    return detectBrowserLanguage();
+  };
 
   function translateTextNode(node, language) {
     if (node.parentElement?.closest("[data-i18n-skip]")) return;
@@ -1129,7 +1146,15 @@
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  if (langSelect) langSelect.addEventListener("change", () => setLanguage(langSelect.value));
+  if (langSelect) langSelect.addEventListener("change", () => {
+    localStorage.setItem(USER_SELECTED_KEY, "true");
+    setLanguage(langSelect.value);
+  });
+  window.addEventListener("languagechange", () => {
+    if (localStorage.getItem(USER_SELECTED_KEY) === "true") return;
+    const detected = detectBrowserLanguage();
+    if (detected !== currentLanguage()) setLanguage(detected);
+  });
   const nativeAlert = window.alert.bind(window);
   const nativeConfirm = window.confirm.bind(window);
   window.alert = message => {
