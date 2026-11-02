@@ -60,7 +60,7 @@
       --card-shadow-hover: 0 16px 30px rgba(0, 0, 0, 0.18);
       --chip-bg: #efe1be;
       --chip-text: #5d4037;
-      --main-font: "2045alphabet", "Hiragino Mincho ProN", serif;
+      --main-font: "Hiragino Mincho ProN", serif;
     }
 
     @font-face {
@@ -884,4 +884,5 @@
       padding: 20px;
       border: 2px dashed red;
     }
+
 
