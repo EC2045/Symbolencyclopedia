@@ -17,7 +17,7 @@ function normalizeItem(item) {
     danger: ['blue', 'yellow', 'red'].includes(String(item.danger || 'blue').toLowerCase())
       ? String(item.danger).toLowerCase()
       : 'blue',
-    image: String(imagebaseurl + item.image || ''),
+    image: String(item.image || '').split(imagebaseurl).join(''),
     reading: String(item.reading || ''),
     summary: String(item.summary || ''),
     detail: String(item.detail || ''),
@@ -72,7 +72,14 @@ function normalizeDB(db) {
 function loadDB() {
   try {
     const raw = localStorage.getItem(STORAGE_DB);
-    if (raw) return normalizeDB(JSON.parse(raw));
+    if (raw) {
+      const db = normalizeDB(JSON.parse(raw));
+      // Add the newly published variant without replacing local edits.
+      if (!db.symbols.some(item => item.id === 'SYM-003-2')) {
+        db.symbols.push(createDefaultDB().symbols.find(item => item.id === 'SYM-003-2'));
+      }
+      return db;
+    }
   } catch (_) { }
   return createDefaultDB();
 }

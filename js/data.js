@@ -51,6 +51,15 @@ function createDefaultDB() {
         createdAt: nowStamp(), updatedAt: nowStamp()
       },
       {
+        id: 'SYM-003-2', seq: 3.1, type: 'symbols', name: '疲感嘆符（亜種）', reading: 'らんたんふ', author: '不明', danger: 'blue',
+        image: '疑問図鑑_003_2.png', summary: '疲感嘆符の派生亜種。疲れを表す別の形。',
+        detail: '疲感嘆符から派生した亜種。原種と同じく、とても疲れた気持ちを表す。',
+        origin: '作者による派生再設計。',
+        usage: '原種と同様。', tags: ['ネットスラング', '感情表現', '疲労', '亜種'],
+        variantOf: 'SYM-003',
+        createdAt: nowStamp(), updatedAt: nowStamp()
+      },
+      {
         id: 'SYM-004', seq: 4, type: 'symbols', name: '感嘆謝符', reading: 'かんたんしゃふ', author: '不明', danger: 'blue',
         image: '疑問図鑑_004.png', summary: '感謝を表す記号',
         detail: '通常の感嘆符がわずかにお辞儀をしているような曲線を持つ。驚きよりも「ありがたさ」が上回った際に、言葉にできない謝意を視覚化するために用いられる。',
