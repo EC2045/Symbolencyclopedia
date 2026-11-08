@@ -200,7 +200,7 @@
     .settings-trigger {
       position: fixed;
       top: 18px;
-      right: 18px;
+      inset-inline-end: 18px;
       z-index: 100001;
       background: var(--box-bg);
       color: var(--text-color);
@@ -214,20 +214,20 @@
     #side-menu {
       position: fixed;
       top: 0;
-      right: -380px;
+      inset-inline-end: -380px;
       width: 380px;
       height: 100%;
       background: var(--box-bg);
-      border-left: 2px solid var(--border-color);
+      border-inline-start: 2px solid var(--border-color);
       z-index: 100002;
       padding: 40px 18px;
-      transition: right .36s cubic-bezier(.16, 1, .3, 1);
+      transition: inset-inline-end .36s cubic-bezier(.16, 1, .3, 1);
       overflow: auto;
       box-shadow: -6px 0 15px rgba(0, 0, 0, .08);
     }
 
     #side-menu.open {
-      right: 0;
+      inset-inline-end: 0;
     }
 
     .setting-group {
@@ -236,8 +236,8 @@
 
     .setting-label {
       display: block;
-      padding-left: 8px;
-      border-left: 3px solid var(--accent-color);
+      padding-inline-start: 8px;
+      border-inline-start: 3px solid var(--accent-color);
       margin-bottom: 8px;
       font-weight: 700;
       font-size: .92rem;
@@ -327,7 +327,7 @@
 
     #main-contents {
       max-width: 1120px;
-      margin: 40px auto;
+      margin: 88px auto 40px;
       padding: 0 20px;
       position: relative;
       z-index: 1;
@@ -358,7 +358,7 @@
       flex-direction: column;
       align-items: stretch;
       gap: 12px;
-      padding: 16px;
+      padding: 16px 16px 32px;
       border: 1px solid var(--border-color);
       background: var(--box-bg);
       border-radius: var(--radius);
@@ -445,14 +445,14 @@
       background: var(--chip-bg);
       color: var(--chip-text);
       border: 1px solid var(--border-color);
-      margin-right: 6px;
+      margin-inline-end: 6px;
       margin-top: 6px;
     }
 
     .danger-badge {
       position: absolute;
       top: 10px;
-      right: 10px;
+      inset-inline-end: 10px;
       padding: 5px 9px;
       border-radius: 999px;
       font-weight: 700;
@@ -479,7 +479,7 @@
       content: "# " attr(data-id);
       position: absolute;
       bottom: 8px;
-      right: 10px;
+      inset-inline-end: 10px;
       font-size: .72rem;
       opacity: .35;
       pointer-events: none;
@@ -517,10 +517,10 @@
     }
 
     .modal-close {
-      float: right;
+      float: inline-end;
       cursor: pointer;
       font-size: 20px;
-      margin-left: 10px;
+      margin-inline-start: 10px;
       background: none;
       border: none;
       color: var(--text-color);
@@ -528,7 +528,7 @@
 
     .detail-record {
       background: #f6f6f6;
-      border-left: 4px solid var(--accent-color);
+      border-inline-start: 4px solid var(--accent-color);
       padding: 12px;
       line-height: 1.6;
       box-sizing: border-box;
@@ -587,7 +587,7 @@
     }
 
     .scp-body {
-      text-align: left;
+      text-align: start;
       margin: 12px 0;
       line-height: 1.6;
       opacity: .95;
@@ -713,18 +713,18 @@
 
     .danger-banner.red {
       background: #4d1111;
-      border-left: 4px solid #ff6b6b;
+      border-inline-start: 4px solid #ff6b6b;
     }
 
     .danger-banner.yellow {
       background: #4d3f11;
-      border-left: 4px solid #ffd54f;
+      border-inline-start: 4px solid #ffd54f;
       color: #f2f2f2;
     }
 
     .danger-banner.blue {
       background: #11304d;
-      border-left: 4px solid #7db7ff;
+      border-inline-start: 4px solid #7db7ff;
     }
 
     .editor-grid {
@@ -808,11 +808,11 @@
 
       #side-menu {
         width: 100%;
-        right: -100%;
+        inset-inline-end: -100%;
       }
 
       #side-menu.open {
-        right: 0;
+        inset-inline-end: 0;
       }
 
       .entry,
@@ -917,3 +917,82 @@
 
 
 
+
+/* Keep controls and mixed-script content within their RTL/LTR containers. */
+.side-menu-close {
+  position: absolute;
+  inset-inline-start: 10px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.setting-control,
+.editor-grid > *,
+.archive-card > * {
+  min-width: 0;
+}
+
+.setting-control {
+  max-width: 100%;
+}
+
+.symbol-name,
+.card-title,
+.tag-badge,
+[data-i18n-writing] {
+  overflow-wrap: anywhere;
+}
+
+.entry::after,
+.archive-card::after {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+input,
+textarea,
+select {
+  text-align: start;
+}
+
+/* A separate scale composes with hover zoom and floating-image animation. */
+html[data-language="shellvail"][dir="rtl"] :is(.symbol img, .card-thumb img, #detail-modal-body img, .floating-symbol) {
+  scale: -1 1;
+}
+
+@media (max-width: 600px) {
+  #home-screen {
+    padding: 88px 20px 36px;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+
+  .home-title {
+    max-width: 100%;
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .menu-container {
+    width: 100%;
+  }
+
+  .search-input,
+  .filter-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .scp-actions {
+    flex-wrap: wrap;
+  }
+
+  .scp-panel {
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+  }
+}

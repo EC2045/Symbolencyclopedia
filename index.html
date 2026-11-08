@@ -35,8 +35,7 @@
 <button class="settings-trigger" id="settings-btn" onclick="toggleSideMenu()">⚙ 設定</button>
 
   <div id="side-menu" aria-hidden="true">
-    <button
-      style="position:absolute; left:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;"
+    <button class="side-menu-close" aria-label="閉じる"
       onclick="toggleSideMenu()">×</button>
     <h3 style="border-bottom:1px solid var(--border-color); padding-bottom:8px;">高度な設定 & データベース</h3>
 
@@ -55,7 +54,7 @@
     </div>
 
     <div class="setting-group" id="shellvail-writing-setting" style="display:none;">
-      <span class="setting-label" data-i18n-skip dir="ltr">シェルヴァイルの表示</span>
+      <span class="setting-label" data-i18n-skip>シェルヴァイルの表示</span>
       <select data-i18n-skip dir="ltr" id="shellvail-writing-select" class="setting-control" aria-label="シェルヴァイルの表示">
         <option value="latn">ラテン文字（LTR）</option>
         <option value="rtl">シェル文字（RTL）</option>
@@ -295,7 +294,7 @@
       <h3>組織憲章</h3>
       <p>このアーカイブは世界に散らばった「問い」の断片を収集しています。</p>
       <div
-        style="background:rgba(128,128,128,.08); border-left:4px solid var(--accent-color); padding:12px; margin:12px 0;">
+        style="background:rgba(128,128,128,.08); border-inline-start:4px solid var(--accent-color); padding:12px; margin:12px 0;">
         <strong>【警告 / Disclaimer】</strong><br>
         本ウェブサイトの内容はすべて架空の記号、組織です。現実世界に実在する組織とは一切の関わりがありません。
       </div>

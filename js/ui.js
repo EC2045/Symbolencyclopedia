@@ -765,20 +765,20 @@ function createArchiveCard(item) {
   meta.appendChild(typeSpan);
 
   const dangerSpan = document.createElement('span');
-  dangerSpan.style.marginLeft = '10px';
+  dangerSpan.style.marginInlineStart = '10px';
   dangerSpan.textContent = dangerLabel(item.danger);
   meta.appendChild(dangerSpan);
 
   if (item.author) {
     const authorSpan = document.createElement('span');
-    authorSpan.style.marginLeft = '10px';
+    authorSpan.style.marginInlineStart = '10px';
     authorSpan.textContent = `作者：${item.author}`;
     meta.appendChild(authorSpan);
   }
 
   if (item.variantOf) {
     const variantSpan = document.createElement('span');
-    variantSpan.style.marginLeft = '10px';
+    variantSpan.style.marginInlineStart = '10px';
     variantSpan.textContent = '亜種';
     meta.appendChild(variantSpan);
   }
