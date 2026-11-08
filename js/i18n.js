@@ -1,6 +1,11 @@
 (() => {
   const STORAGE_KEY = "symbolencyclopedia-language";
-  const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo"];
+  const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo", "shellvail-latn", "shellvail-rtl"];
+  const isShellvail = language => language.startsWith("shellvail-");
+  const languagePresentation = {
+    "shellvail-latn": { lang: "x-shellvail-latn", dir: "ltr" },
+    "shellvail-rtl": { lang: "x-shellvail", dir: "rtl" }
+  };
   const languageBaseURL = new URL("../lang/", document.currentScript.src);
   const normalize = value => value.trim().replace(/\s+/g, " ");
 
@@ -39,7 +44,14 @@
     const originalText = new WeakMap();
     const originalAttributes = new WeakMap();
     const langSelect = document.getElementById("language-select");
-  const languageDictionary = language => dictionaries[language] || dictionaries.ja;
+  const shellvailDictionary = {
+    ...dictionaries["shellvail-latn"],
+    ...Object.fromEntries(Object.entries(dictionaries["shellvail-rtl"]).filter(([, value]) => value))
+  };
+  const languageDictionary = language => language === "shellvail-rtl"
+    ? shellvailDictionary
+    : dictionaries[language] || dictionaries.ja;
+  const fallbackText = (language, key) => isShellvail(language) || language === "ja-easy" || language === "ja-old" ? key : translations[key];
   const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
   const AUTO_SELECTED_KEY = "symbolencyclopedia-language-auto";
   function detectBrowserLanguage() {
@@ -61,10 +73,31 @@
     return detectBrowserLanguage();
   };
 
+
+  function updateWriting(node, language, translated) {
+    const parent = node.parentElement;
+    if (!parent || parent.closest("head, option, textarea")) return;
+    let span = parent.matches("[data-i18n-writing]") ? parent : null;
+    if (!span && !isShellvail(language)) return;
+    if (!span) {
+      span = document.createElement("span");
+      span.dataset.i18nWriting = "";
+      parent.insertBefore(span, node);
+      span.appendChild(node);
+    }
+    const shellText = isShellvail(language) && translated;
+    span.classList.toggle("shellvail-script", shellText && language === "shellvail-rtl");
+    span.classList.toggle("shellvail-latin", shellText && language === "shellvail-latn");
+    span.lang = shellText ? languagePresentation[language].lang : (isShellvail(language) ? "ja" : document.documentElement.lang);
+    span.dir = shellText ? languagePresentation[language].dir : "ltr";
+  }
+
   function translateTextNode(node, language) {
     if (node.parentElement?.closest("[data-i18n-skip], script, style")) return;
     if (!originalText.has(node)) originalText.set(node, node.nodeValue);
     const original = originalText.get(node);
+    if (!original.trim()) return;
+    updateWriting(node, language, false);
     if (language === "ja") {
       if (node.nodeValue !== original) node.nodeValue = original;
       return;
@@ -73,7 +106,7 @@
     const trailing = original.match(/\s*$/)?.[0] || "";
     const key = normalize(original);
     const dictionary = languageDictionary(language);
-    let value = dictionary[key] ?? ((language === "ja-easy" || language === "ja-old") ? key : translations[key]);
+    let value = dictionary[key] || fallbackText(language, key);
     if (value === undefined) {
       value = key
         .replace(/^作者：/, "Author: ")
@@ -86,7 +119,12 @@
         .replace(/^組織資料$/, "Organization record");
     }
     if (value !== undefined) {
-      const translated = leading + value + trailing;
+      updateWriting(node, language, Boolean(dictionary[key]));
+      // Keep Arabic numerals left-to-right inside the RTL glyph run.
+      const displayed = language === "shellvail-rtl" && dictionary[key]
+        ? value.normalize("NFC").replace(/[0-9]+(?:[.,:/-][0-9]+)*/g, digits => "\u2066" + digits + "\u2069")
+        : value;
+      const translated = leading + displayed + trailing;
       if (node.nodeValue !== translated) node.nodeValue = translated;
     }
   }
@@ -98,7 +136,7 @@
       if (!originals) { originals = {}; originalAttributes.set(element, originals); }
       if (!(attr in originals)) originals[attr] = element.getAttribute(attr);
       const original = originals[attr];
-      element.setAttribute(attr, language === "ja" ? original : (languageDictionary(language)[normalize(original)] ?? ((language === "ja-easy" || language === "ja-old") ? original : translations[normalize(original)] ?? original)));
+      element.setAttribute(attr, language === "ja" ? original : (languageDictionary(language)[normalize(original)] || fallbackText(language, normalize(original)) || original));
     }
   }
 
@@ -115,7 +153,9 @@
   function setLanguage(language) {
     const chosen = supportedLanguages.includes(language) ? language : "ja";
     localStorage.setItem(STORAGE_KEY, chosen);
-    document.documentElement.lang = chosen.startsWith("ja-") ? "ja" : chosen;
+    const presentation = languagePresentation[chosen];
+    document.documentElement.lang = presentation?.lang || (chosen.startsWith("ja-") ? "ja" : chosen);
+    document.documentElement.dir = presentation?.dir || "ltr";
     document.documentElement.dataset.language = chosen;
     if (langSelect) langSelect.value = chosen;
     const namingSetting = document.getElementById("polished-name-setting");
@@ -166,11 +206,11 @@
   const nativeConfirm = window.confirm.bind(window);
   window.alert = message => {
     const language = currentLanguage();
-    return nativeAlert(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] ?? translations[normalize(String(message))] ?? message));
+    return nativeAlert(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] || fallbackText(language, normalize(String(message))) || message));
   };
   window.confirm = message => {
     const language = currentLanguage();
-    return nativeConfirm(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] ?? translations[normalize(String(message))] ?? message));
+    return nativeConfirm(language === "ja" ? message : (languageDictionary(language)[normalize(String(message))] || fallbackText(language, normalize(String(message))) || message));
   };
   const legacyLanguage = localStorage.getItem(STORAGE_KEY);
   if (legacyLanguage && legacyLanguage !== "ja" && !localStorage.getItem(USER_SELECTED_KEY) && !localStorage.getItem(AUTO_SELECTED_KEY)) {
@@ -182,3 +222,4 @@
   }
   window.i18nReady = initialize();
 })();
+
