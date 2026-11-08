@@ -886,3 +886,34 @@
     }
 
 
+
+/* Shellfun maps Latin characters to Shell script; override their bidi direction. */
+@font-face {
+  font-family: 'Shellfun';
+  src: url('fonts/shellfun-regular.otf') format('opentype');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.shellvail-script {
+  font-family: 'Shellfun', sans-serif;
+  direction: rtl;
+  unicode-bidi: isolate-override;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+.shellvail-latin {
+  font-family: system-ui, sans-serif;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+[data-i18n-writing][dir="ltr"] {
+  unicode-bidi: isolate;
+}
+
+
+
