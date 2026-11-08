@@ -1,10 +1,20 @@
 (() => {
   const STORAGE_KEY = "symbolencyclopedia-language";
-  const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo", "shellvail-latn", "shellvail-rtl"];
-  const isShellvail = language => language.startsWith("shellvail-");
+  const supportedLanguages = ["ja", "ja-easy", "ja-old", "en", "zh", "eo", "shellvail"];
+  const isShellvail = language => language === "shellvail";
+  const WRITING_KEY = "symbolencyclopedia-shellvail-writing";
+  // Migrate the old language choices without losing the selected presentation.
+  const legacyShellvail = localStorage.getItem(STORAGE_KEY);
+  if (legacyShellvail === "shellvail-latn" || legacyShellvail === "shellvail-rtl") {
+    if (!localStorage.getItem(WRITING_KEY)) {
+      localStorage.setItem(WRITING_KEY, legacyShellvail === "shellvail-rtl" ? "rtl" : "latn");
+    }
+    localStorage.setItem(STORAGE_KEY, "shellvail");
+  }
+  const currentWriting = () => localStorage.getItem(WRITING_KEY) === "rtl" ? "rtl" : "latn";
   const languagePresentation = {
-    "shellvail-latn": { lang: "x-shellvail-latn", dir: "ltr" },
-    "shellvail-rtl": { lang: "x-shellvail", dir: "rtl" }
+    latn: { lang: "x-shellvail-latn", dir: "ltr" },
+    rtl: { lang: "x-shellvail", dir: "rtl" }
   };
   const languageBaseURL = new URL("../lang/", document.currentScript.src);
   const normalize = value => value.trim().replace(/\s+/g, " ");
@@ -44,13 +54,8 @@
     const originalText = new WeakMap();
     const originalAttributes = new WeakMap();
     const langSelect = document.getElementById("language-select");
-  const shellvailDictionary = {
-    ...dictionaries["shellvail-latn"],
-    ...Object.fromEntries(Object.entries(dictionaries["shellvail-rtl"]).filter(([, value]) => value))
-  };
-  const languageDictionary = language => language === "shellvail-rtl"
-    ? shellvailDictionary
-    : dictionaries[language] || dictionaries.ja;
+  const languageDictionary = language => dictionaries[language] || dictionaries.ja;
+  const writingSelect = document.getElementById("shellvail-writing-select");
   const fallbackText = (language, key) => isShellvail(language) || language === "ja-easy" || language === "ja-old" ? key : translations[key];
   const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
   const AUTO_SELECTED_KEY = "symbolencyclopedia-language-auto";
@@ -86,10 +91,10 @@
       span.appendChild(node);
     }
     const shellText = isShellvail(language) && translated;
-    span.classList.toggle("shellvail-script", shellText && language === "shellvail-rtl");
-    span.classList.toggle("shellvail-latin", shellText && language === "shellvail-latn");
-    span.lang = shellText ? languagePresentation[language].lang : (isShellvail(language) ? "ja" : document.documentElement.lang);
-    span.dir = shellText ? languagePresentation[language].dir : "ltr";
+    span.classList.toggle("shellvail-script", shellText && currentWriting() === "rtl");
+    span.classList.toggle("shellvail-latin", shellText && currentWriting() === "latn");
+    span.lang = shellText ? languagePresentation[currentWriting()].lang : (isShellvail(language) ? "ja" : document.documentElement.lang);
+    span.dir = shellText ? languagePresentation[currentWriting()].dir : "ltr";
   }
 
   function translateTextNode(node, language) {
@@ -121,7 +126,7 @@
     if (value !== undefined) {
       updateWriting(node, language, Boolean(dictionary[key]));
       // Keep Arabic numerals left-to-right inside the RTL glyph run.
-      const displayed = language === "shellvail-rtl" && dictionary[key]
+      const displayed = isShellvail(language) && currentWriting() === "rtl" && dictionary[key]
         ? value.normalize("NFC").replace(/[0-9]+(?:[.,:/-][0-9]+)*/g, digits => "\u2066" + digits + "\u2069")
         : value;
       const translated = leading + displayed + trailing;
@@ -153,7 +158,10 @@
   function setLanguage(language) {
     const chosen = supportedLanguages.includes(language) ? language : "ja";
     localStorage.setItem(STORAGE_KEY, chosen);
-    const presentation = languagePresentation[chosen];
+    const presentation = isShellvail(chosen) ? languagePresentation[currentWriting()] : null;
+    const writingSetting = document.getElementById("shellvail-writing-setting");
+    if (writingSetting) writingSetting.style.display = isShellvail(chosen) ? "" : "none";
+    if (writingSelect) writingSelect.value = currentWriting();
     document.documentElement.lang = presentation?.lang || (chosen.startsWith("ja-") ? "ja" : chosen);
     document.documentElement.dir = presentation?.dir || "ltr";
     document.documentElement.dataset.language = chosen;
@@ -195,6 +203,10 @@
     localStorage.setItem(USER_SELECTED_KEY, "true");
     localStorage.removeItem(AUTO_SELECTED_KEY);
     setLanguage(langSelect.value);
+  });
+  if (writingSelect) writingSelect.addEventListener("change", () => {
+    localStorage.setItem(WRITING_KEY, writingSelect.value === "rtl" ? "rtl" : "latn");
+    setLanguage(currentLanguage());
   });
   window.addEventListener("languagechange", () => {
     if (localStorage.getItem(USER_SELECTED_KEY) === "true") return;
