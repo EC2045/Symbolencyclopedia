@@ -56,6 +56,15 @@
     const langSelect = document.getElementById("language-select");
   const languageDictionary = language => dictionaries[language] || dictionaries.ja;
   const writingSelect = document.getElementById("shellvail-writing-select");
+  // Shared lookup for dynamically rendered archive names.
+  window.siteI18n = Object.freeze({
+    getTranslation(key, language = currentLanguage()) {
+      return languageDictionary(language)[normalize(String(key))] || "";
+    },
+    getPresentation(language = currentLanguage()) {
+      return isShellvail(language) ? { ...languagePresentation[currentWriting()] } : null;
+    }
+  });
   const fallbackText = (language, key) => isShellvail(language) || language === "ja-easy" || language === "ja-old" ? key : translations[key];
   const USER_SELECTED_KEY = "symbolencyclopedia-language-manual";
   const AUTO_SELECTED_KEY = "symbolencyclopedia-language-auto";

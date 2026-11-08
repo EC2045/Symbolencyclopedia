@@ -320,6 +320,12 @@ function getEntryDisplayName(item) {
   const japanese = item?.name || item?.title || `ID ${item?.id || ''}`;
   const language = document.documentElement.dataset.language || document.documentElement.lang;
   if (language === 'ja') return japanese;
+  if (language === 'en' && localStorage.getItem('symbolencyclopedia-polished-names') === 'true' && POLISHED_ENGLISH_NAMES[japanese]) {
+    return `${POLISHED_ENGLISH_NAMES[japanese]} (${japanese})`;
+  }
+  const translated = window.siteI18n?.getTranslation(japanese, language);
+  if (translated) return translated;
+  if (language === 'shellvail') return japanese;
   if (language === 'ja-old') return OLD_ARCHIVE_NAMES[japanese] || japanese;
   if (language === 'ja-easy') return EASY_ARCHIVE_NAMES[japanese] || japanese;
   if (language === 'zh') {
@@ -336,6 +342,19 @@ function getEntryDisplayName(item) {
     ? POLISHED_ENGLISH_NAMES[japanese]
     : '';
   return `${polished || english} (${japanese})`;
+}
+
+
+// Names are translated explicitly because their containers skip tree translation.
+function getEntryNameHTML(item) {
+  const name = getEntryDisplayName(item);
+  const original = item?.name || item?.title || `ID ${item?.id || ''}`;
+  const language = document.documentElement.dataset.language || document.documentElement.lang;
+  const translated = language === 'shellvail' && window.siteI18n?.getTranslation(original, language);
+  const presentation = translated ? window.siteI18n.getPresentation(language) : null;
+  const className = presentation ? (presentation.dir === 'rtl' ? 'shellvail-script' : 'shellvail-latin') : '';
+  const lang = presentation?.lang || (language === 'shellvail' ? 'ja' : document.documentElement.lang);
+  return `<span data-i18n-skip="true" class="${className}" lang="${escapeAttr(lang)}" dir="${presentation?.dir || 'ltr'}">${escapeHtml(name)}</span>`;
 }
 
 
@@ -379,7 +398,11 @@ function openLinkedItem(type, id) {
 }
 
 function makeLinkChip(type, id, label) {
-  return `<button data-i18n-skip="true" type="button" class="tag-badge" style="cursor:pointer; border:1px solid var(--border-color); background:var(--chip-bg); color:var(--chip-text);" onclick="openLinkedItem('${type}', '${escapeAttr(id)}'); event.stopPropagation();">${escapeHtml(label)}</button>`;
+  const item = getItemById(type, id);
+  const content = item
+    ? `${getEntryNameHTML(item)} <bdi dir="ltr">(${escapeHtml(id)})</bdi>`
+    : escapeHtml(label);
+  return `<button data-i18n-skip="true" type="button" class="tag-badge" style="cursor:pointer; border:1px solid var(--border-color); background:var(--chip-bg); color:var(--chip-text);" onclick="openLinkedItem('${type}', '${escapeAttr(id)}'); event.stopPropagation();">${content}</button>`;
 }
 
 function makeCaseLinks(ids) {
@@ -731,7 +754,7 @@ function createArchiveCard(item) {
   const heading = document.createElement('h3');
   heading.className = 'symbol-name';
   heading.dataset.i18nSkip = 'true';
-  heading.textContent = title;
+  heading.innerHTML = getEntryNameHTML(item);
   body.appendChild(heading);
 
   const meta = document.createElement('div');
@@ -903,7 +926,7 @@ function openUnifiedDetail(type, id) {
   const parentItem = item.variantOf ? getItemById('symbols', item.variantOf) : null;
 
   let html = renderDangerBanner(item.danger);
-  html += `<div style="margin-top:14px;"><strong>名称：</strong><span data-i18n-skip="true">${escapeHtml(getEntryDisplayName(item))}</span></div>`;
+  html += `<div style="margin-top:14px;"><strong>名称：</strong><span data-i18n-skip="true">${getEntryNameHTML(item)}</span></div>`;
   html += `<div><strong>ID：</strong>${escapeHtml(item.id || '')}</div>`;
   html += `<div><strong>作者：</strong>${escapeHtml(item.author || '')}</div>`;
   if (item.reading) html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
@@ -970,7 +993,7 @@ function openUnifiedDetail(type, id) {
   }
 
   titleEl.dataset.i18nSkip = 'true';
-  titleEl.innerText = getEntryDisplayName(item);
+  titleEl.innerHTML = getEntryNameHTML(item);
   bodyEl.innerHTML = html;
   setModal('detail-modal', true);
 }
