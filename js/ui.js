@@ -929,7 +929,7 @@ function openUnifiedDetail(type, id) {
   html += `<div style="margin-top:14px;"><strong>名称：</strong><span data-i18n-skip="true">${getEntryNameHTML(item)}</span></div>`;
   html += `<div><strong>ID：</strong>${escapeHtml(item.id || '')}</div>`;
   html += `<div><strong>作者：</strong>${escapeHtml(item.author || '')}</div>`;
-  if (item.reading) html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
+  if (item.reading && document.documentElement.dataset.language !== 'shellvail') html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
   if (item.variantOf) {
     const label = parentItem ? `${getEntryDisplayName(parentItem)} (${parentItem.id})` : item.variantOf;
     html += `<div><strong>元の記号：</strong>${makeLinkChip('symbols', item.variantOf, label)}</div>`;
