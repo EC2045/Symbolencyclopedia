@@ -996,3 +996,17 @@ html[data-language="shellvail"][dir="rtl"] :is(.symbol img, .card-thumb img, #de
     overflow: auto;
   }
 }
+
+/* Order the label and its separator as a unit, outside the glyph bidi override. */
+.detail-field-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .12em;
+  unicode-bidi: isolate;
+  vertical-align: baseline;
+}
+
+.detail-field-separator {
+  font-family: system-ui, sans-serif;
+  unicode-bidi: isolate;
+}

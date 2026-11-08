@@ -908,6 +908,24 @@ function renderDangerBanner(danger) {
   return `<div class="detail-record danger-banner ${d}"><strong>${title}</strong><br>${escapeHtml(text)}</div>`;
 }
 
+// Lay out field separators independently of translated text's bidi behavior.
+function getDetailFieldLabelHTML(original) {
+  if (document.documentElement.dataset.language !== 'shellvail') {
+    return `<strong>${escapeHtml(original)}</strong>`;
+  }
+  const translation = window.siteI18n?.getTranslation(original, 'shellvail') || '';
+  const presentation = window.siteI18n?.getPresentation('shellvail') || { dir: 'ltr', lang: 'x-shellvail-latn' };
+  // Existing .lang values may put either colon at either end. It is a separator,
+  // so render it once outside the font's overridden glyph run.
+  const stripSeparator = value => value.replace(/^[\s:：]+|[\s:：]+$/g, '');
+  const label = stripSeparator(translation) || stripSeparator(original);
+  const className = translation
+    ? (presentation.dir === 'rtl' ? 'shellvail-script' : 'shellvail-latin')
+    : '';
+  const lang = translation ? presentation.lang : 'ja';
+  return `<strong class="detail-field-label" data-i18n-skip="true" dir="${presentation.dir}"><span class="${className}" lang="${lang}" dir="${translation ? presentation.dir : 'ltr'}">${escapeHtml(label)}</span><span class="detail-field-separator" dir="ltr">:</span></strong>`;
+}
+
 function openUnifiedDetail(type, id) {
   const item = getItemById(type, id);
   if (!item) return;
@@ -926,42 +944,42 @@ function openUnifiedDetail(type, id) {
   const parentItem = item.variantOf ? getItemById('symbols', item.variantOf) : null;
 
   let html = renderDangerBanner(item.danger);
-  html += `<div style="margin-top:14px;"><strong>名称：</strong><span data-i18n-skip="true">${getEntryNameHTML(item)}</span></div>`;
-  html += `<div><strong>ID：</strong>${escapeHtml(item.id || '')}</div>`;
-  html += `<div><strong>作者：</strong>${escapeHtml(item.author || '')}</div>`;
-  if (item.reading && document.documentElement.dataset.language !== 'shellvail') html += `<div><strong>読み：</strong>${escapeHtml(item.reading)}</div>`;
+  html += `<div style="margin-top:14px;">${getDetailFieldLabelHTML('名称：')}<span data-i18n-skip="true">${getEntryNameHTML(item)}</span></div>`;
+  html += `<div>${getDetailFieldLabelHTML('ID：')}${escapeHtml(item.id || '')}</div>`;
+  html += `<div>${getDetailFieldLabelHTML('作者：')}${escapeHtml(item.author || '')}</div>`;
+  if (item.reading && document.documentElement.dataset.language !== 'shellvail') html += `<div>${getDetailFieldLabelHTML('読み：')}${escapeHtml(item.reading)}</div>`;
   if (item.variantOf) {
     const label = parentItem ? `${getEntryDisplayName(parentItem)} (${parentItem.id})` : item.variantOf;
-    html += `<div><strong>元の記号：</strong>${makeLinkChip('symbols', item.variantOf, label)}</div>`;
-    html += `<div style="margin-top:8px;"><strong>亜種メモ：</strong>仕様はほぼ同じです。見た目の差分を中心に扱います。</div>`;
+    html += `<div>${getDetailFieldLabelHTML('元の記号：')}${makeLinkChip('symbols', item.variantOf, label)}</div>`;
+    html += `<div style="margin-top:8px;">${getDetailFieldLabelHTML('亜種メモ：')}仕様はほぼ同じです。見た目の差分を中心に扱います。</div>`;
   }
-  if (item.org) html += `<div><strong>所属 / 組織：</strong>${escapeHtml(item.org)}</div>`;
-  if (item.activity) html += `<div><strong>活動：</strong>${escapeHtml(item.activity)}</div>`;
-  if (item.level) html += `<div><strong>レベル：</strong>${escapeHtml(item.level)}</div>`;
-  if (item.mission) html += `<div><strong>使命：</strong>${escapeHtml(item.mission)}</div>`;
-  if (item.era) html += `<div><strong>時代：</strong>${escapeHtml(item.era)}</div>`;
-  if (item.status) html += `<div><strong>状態：</strong>${escapeHtml(item.status)}</div>`;
-  if (item.scope) html += `<div><strong>範囲：</strong>${escapeHtml(item.scope)}</div>`;
-  if (item.date) html += `<div><strong>日付：</strong>${escapeHtml(item.date)}</div>`;
-  if (item.origin) html += `<div style="margin-top:8px;"><strong>由来：</strong><br>${escapeHtmlWithBr(item.origin)}</div>`;
-  if (item.usage) html += `<div><strong>用途：</strong><br>${escapeHtmlWithBr(item.usage)}</div>`;
-  if (item.example) html += `<div style="margin-top:8px;"><strong>使用例：</strong><br>${escapeHtmlWithBr(item.example)}</div>`;
-  if (item.summary) html += `<div style="margin-top:8px;"><strong>概要：</strong><br>${escapeHtmlWithBr(item.summary)}</div>`;
-  if (item.detail) html += `<div style="margin-top:8px;"><strong>詳細：</strong><br>${escapeHtmlWithBr(item.detail)}</div>`;
-  if (tags) html += `<div style="margin-top:10px;"><strong>タグ：</strong>${tags}</div>`;
+  if (item.org) html += `<div>${getDetailFieldLabelHTML('所属 / 組織：')}${escapeHtml(item.org)}</div>`;
+  if (item.activity) html += `<div>${getDetailFieldLabelHTML('活動：')}${escapeHtml(item.activity)}</div>`;
+  if (item.level) html += `<div>${getDetailFieldLabelHTML('レベル：')}${escapeHtml(item.level)}</div>`;
+  if (item.mission) html += `<div>${getDetailFieldLabelHTML('使命：')}${escapeHtml(item.mission)}</div>`;
+  if (item.era) html += `<div>${getDetailFieldLabelHTML('時代：')}${escapeHtml(item.era)}</div>`;
+  if (item.status) html += `<div>${getDetailFieldLabelHTML('状態：')}${escapeHtml(item.status)}</div>`;
+  if (item.scope) html += `<div>${getDetailFieldLabelHTML('範囲：')}${escapeHtml(item.scope)}</div>`;
+  if (item.date) html += `<div>${getDetailFieldLabelHTML('日付：')}${escapeHtml(item.date)}</div>`;
+  if (item.origin) html += `<div style="margin-top:8px;">${getDetailFieldLabelHTML('由来：')}<br>${escapeHtmlWithBr(item.origin)}</div>`;
+  if (item.usage) html += `<div>${getDetailFieldLabelHTML('用途：')}<br>${escapeHtmlWithBr(item.usage)}</div>`;
+  if (item.example) html += `<div style="margin-top:8px;">${getDetailFieldLabelHTML('使用例：')}<br>${escapeHtmlWithBr(item.example)}</div>`;
+  if (item.summary) html += `<div style="margin-top:8px;">${getDetailFieldLabelHTML('概要：')}<br>${escapeHtmlWithBr(item.summary)}</div>`;
+  if (item.detail) html += `<div style="margin-top:8px;">${getDetailFieldLabelHTML('詳細：')}<br>${escapeHtmlWithBr(item.detail)}</div>`;
+  if (tags) html += `<div style="margin-top:10px;">${getDetailFieldLabelHTML('タグ：')}${tags}</div>`;
 
   if (item.relatedsymbols?.length) {
-    html += `<hr><div><strong>関連記号：</strong>${item.relatedsymbols.map(id => {
+    html += `<hr><div>${getDetailFieldLabelHTML('関連記号：')}${item.relatedsymbols.map(id => {
       const rel = getItemById('symbols', id);
       const label = rel ? `${getEntryDisplayName(rel)} (${rel.id})` : String(id);
       return makeLinkChip('symbols', id, label);
     }).join(' ')}</div>`;
   }
   if (item.relatedCases?.length) {
-    html += `<div style="margin-top:10px;"><strong>関連事案：</strong>${makeCaseLinks(item.relatedCases)}</div>`;
+    html += `<div style="margin-top:10px;">${getDetailFieldLabelHTML('関連事案：')}${makeCaseLinks(item.relatedCases)}</div>`;
   }
   if (item.relatedOrgs?.length) {
-    html += `<div style="margin-top:10px;"><strong>関連組織：</strong>${item.relatedOrgs.map(id => {
+    html += `<div style="margin-top:10px;">${getDetailFieldLabelHTML('関連組織：')}${item.relatedOrgs.map(id => {
       const rel = getItemById('orgs', id);
       const label = rel ? `${getEntryDisplayName(rel)} (${rel.id})` : String(id);
       return makeLinkChip('orgs', id, label);
@@ -969,12 +987,12 @@ function openUnifiedDetail(type, id) {
   }
 
   if (variants.length) {
-    html += `<hr><div><strong>登録済みの亜種：</strong></div>`;
+    html += `<hr><div>${getDetailFieldLabelHTML('登録済みの亜種：')}</div>`;
     html += `<div class="chips-row">${variants.map(v => makeLinkChip('symbols', v.id, `${getEntryDisplayName(v)} (${v.id})`)).join('')}</div>`;
   }
 
   if (incidents.length) {
-    html += '<hr><div><strong>事案記録：</strong></div>';
+    html += `<hr><div>${getDetailFieldLabelHTML('事案記録：')}</div>`;
     incidents.forEach(inc => {
       const relatedAction = inc.relatedType && inc.relatedId
         ? `<div style="margin-top:10px;"><button class="menu-button" type="button" onclick="openLinkedItem('${escapeAttr(inc.relatedType)}','${escapeAttr(inc.relatedId)}')">関連事案を開く</button></div>`
