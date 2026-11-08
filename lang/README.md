@@ -10,7 +10,7 @@
 | `en.lang` | 英語 |
 | `zh.lang` | 中国語 |
 | `eo.lang` | エスペラント語 |
-| `shellvail.lang` | シェルヴァイル語（LTR・RTL共用／準備用） |
+| `shellvail.lang` | シェルヴァイル（LTR・RTL共用／準備用） |
 
 ## 書式
 
@@ -43,17 +43,17 @@
 
 GitHub Pages またはローカルHTTPサーバーで開いてください。`file://` から直接開くと `fetch` が制限されます。ビルドや追加ライブラリは不要です。
 
-## シェルヴァイル語の翻訳準備
+## シェルヴァイルの翻訳準備
 
 現時点では翻訳本文・ページ情報は未記入です。共通ファイルには `ja.lang` の原文キーを用意しています。`日本語の原文=訳文` の右辺だけを埋めてください。空の訳文は未翻訳として扱います。
 
 翻訳は `shellvail.lang` だけを編集します。通常の入力順でラテン文字の訳文を記入してください。LTR・RTLは同じ辞書を参照し、個別の訳文や反転した文字列は保存しません。空欄は日本語原文になります。通知・確認ダイアログ、入力欄の説明も同じ辞書を使います。
 
-設定の言語選択では「シェルヴァイル語」を選び、別の「シェルヴァイル語の表示」でラテン文字（LTR）／シェル文字（RTL）を切り替えます。表示形式は独立して保存されます。以前の `shellvail-latn` / `shellvail-rtl` の保存設定は共通言語 `shellvail` と対応する表示形式に自動移行します。ブラウザの自動判定では選択せず、設定から手動で選べます。
+設定の言語選択では「シェルヴァイル」を選び、別の「シェルヴァイルの表示」でラテン文字（LTR）／シェル文字（RTL）を切り替えます。表示形式は独立して保存されます。以前の `shellvail-latn` / `shellvail-rtl` の保存設定は共通言語 `shellvail` と対応する表示形式に自動移行します。ブラウザの自動判定では選択せず、設定から手動で選べます。
 
 HTMLの `lang` には私用タグ `x-shellvail-latn` / `x-shellvail`、`dir` には `ltr` / `rtl` を設定します。他言語に戻すと文字方向もLTRに戻ります。シェル文字にする翻訳本文の範囲だけを `.shellvail-script` で表示し、日本語の代替表示と言語選択肢は通常の字体・LTRを保ちます。ラテン文字版の訳文は `.shellvail-latin` で表示します。
 
 シェル文字はラテン文字に字形を割り当てるフォントのため、`direction: rtl` と `unicode-bidi: isolate-override` を併用します。訳文を手動で反転する必要はありません。数字の並びはLTRに分離し、シェル文字の訳文は表示時にNFCへ正規化します。ブラウザのタブ、選択欄の項目、入力欄の説明やブラウザ標準ダイアログは通常のテキスト表示です。
 
-フォントは指定された [Shellfun Regular](https://kgar.f5.si/fonts/shellfun-regular.otf) を `fonts/shellfun-regular.otf` に同梱しています。外部サイトのCORS設定に依存せず読み込めます。文法・表記の参照先は [シェルヴァイル語の概要](https://kgar.f5.si/shellvail#overview) です。
+フォントは指定された [Shellfun Regular](https://kgar.f5.si/fonts/shellfun-regular.otf) を `fonts/shellfun-regular.otf` に同梱しています。外部サイトのCORS設定に依存せず読み込めます。文法・表記の参照先は [シェルヴァイルの概要](https://kgar.f5.si/shellvail#overview) です。
 
