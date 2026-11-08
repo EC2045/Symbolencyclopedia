@@ -898,6 +898,8 @@
 
 .shellvail-script {
   font-family: 'Shellfun', sans-serif;
+  font-size: max(1.5em, 1.25rem);
+  line-height: 1.6;
   direction: rtl;
   unicode-bidi: isolate-override;
   font-weight: 400;
@@ -1009,4 +1011,23 @@ html[data-language="shellvail"][dir="rtl"] :is(.symbol img, .card-thumb img, #de
 .detail-field-separator {
   font-family: system-ui, sans-serif;
   unicode-bidi: isolate;
+}
+
+/* Preserve the heading hierarchy while giving Shellfun glyphs more room. */
+:is(.home-title, h1, h2, h3, .symbol-name, .card-title) .shellvail-script {
+  font-size: max(1.3em, 1.25rem);
+}
+
+.detail-field-label {
+  max-inline-size: 100%;
+}
+
+.detail-field-label > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.loader-text-area:has(.shellvail-script) {
+  height: auto;
+  min-height: 2.4em;
 }
